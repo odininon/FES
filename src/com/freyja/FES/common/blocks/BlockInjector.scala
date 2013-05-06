@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.world.World
 import net.minecraft.tileentity.TileEntity
 import com.freyja.FES.common.inventory.TileEntityInjector
+import net.minecraft.entity.player.EntityPlayer
 
 /**
  *
@@ -13,5 +14,7 @@ import com.freyja.FES.common.inventory.TileEntityInjector
  *
  */
 class BlockInjector(blockId: Int, material: Material) extends Block(blockId, material) {
-  override def createTileEntity(world: World, metadata: Int): TileEntity = new TileEntityInjector
+  override def createTileEntity(world: World, metadata: Int): TileEntity = {
+    new TileEntityInjector()
+  }
 }

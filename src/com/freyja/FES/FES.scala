@@ -14,6 +14,8 @@ import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.item.Item
+import net.minecraft.tileentity.TileEntity
+import com.freyja.FES.common.inventory.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
 
 /**
  *
@@ -87,16 +89,21 @@ object FES {
 
     blockReceptacle = new BlockReceptacle(blockReceptacleId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("receptacle")
     registerObject(blockReceptacle, "Receptacle")
+    GameRegistry.registerTileEntity(classOf[TileEntityReceptacle], "Recpetacle")
 
     blockInjector = new BlockInjector(blockInjectorId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("injector")
     registerObject(blockInjector, "Injector")
+    GameRegistry.registerTileEntity(classOf[TileEntityInjector], "Injector")
 
     blockLine = new BlockLine(blockLineId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("line")
     registerObject(blockLine, "Line")
+    GameRegistry.registerTileEntity(classOf[TileEntityLine], "Line")
   }
 
 
   def registerObject(registry: AnyRef, name: String) {
+    logger.info("Registering " + registry + " with name " + name)
+
     registry match {
       case registry: Block => {
         GameRegistry.registerBlock(registry, registry.getUnlocalizedName)
@@ -106,7 +113,7 @@ object FES {
         GameRegistry.registerItem(registry, registry.getUnlocalizedName)
         LanguageRegistry.addName(registry, name)
       }
-      case _ => logger.info("Tried to register neither a block or item.")
+      case _ => logger.info("Tried to register something unknown.")
     }
   }
 

@@ -1,6 +1,7 @@
 package com.freyja.FES.common.inventory
 
 import net.minecraft.tileentity.TileEntity
+import com.freyja.FES.common.Network.RoutingNetwork
 
 /**
  *
@@ -9,5 +10,16 @@ import net.minecraft.tileentity.TileEntity
  *
  */
 class TileEntityInjector extends TileEntity {
+  private var routingNetwork: RoutingNetwork = null
 
+  routingNetwork = new RoutingNetwork()
+  routingNetwork.add(this)
+
+  override def updateEntity() {
+    super.updateEntity()
+      if (routingNetwork == null) {
+      routingNetwork = new RoutingNetwork()
+      routingNetwork.add(this)
+    }
+  }
 }
