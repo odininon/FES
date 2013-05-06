@@ -1,8 +1,6 @@
 package com.freyja.FES.common.Network
 
-import com.freyja.FES.common.inventory.{TileEntityLine, TileEntityReceptacle, TileEntityInjector}
-import scala.collection.mutable
-import com.freyja.FES.FES
+import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityReceptacle, TileEntityInjector}
 
 /**
  *
@@ -20,7 +18,6 @@ class RoutingNetwork {
       case thing: TileEntityReceptacle => receptacles ::= thing
       case thing: TileEntityLine => lines ::= thing
     }
-    FES.logger.info("Adding " + thing + " to network " + this)
   }
 
   def getInjectors: List[_] = {

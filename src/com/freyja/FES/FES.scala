@@ -6,7 +6,6 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.block.Block
 import cpw.mods.fml.common.Mod.{Init, PreInit}
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
-import com.freyja.FES.common.blocks.{BlockInjector, BlockLine, BlockReceptacle}
 import net.minecraft.block.material.Material
 import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
 import net.minecraftforge.common.Configuration
@@ -14,8 +13,8 @@ import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.item.Item
-import net.minecraft.tileentity.TileEntity
-import com.freyja.FES.common.inventory.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
+import com.freyja.FES.common.blocks.{BlockLine, BlockInjector, BlockReceptacle}
+import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
 
 /**
  *
@@ -89,7 +88,7 @@ object FES {
 
     blockReceptacle = new BlockReceptacle(blockReceptacleId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("receptacle")
     registerObject(blockReceptacle, "Receptacle")
-    GameRegistry.registerTileEntity(classOf[TileEntityReceptacle], "Recpetacle")
+    GameRegistry.registerTileEntity(classOf[TileEntityReceptacle], "Receptacle")
 
     blockInjector = new BlockInjector(blockInjectorId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("injector")
     registerObject(blockInjector, "Injector")
