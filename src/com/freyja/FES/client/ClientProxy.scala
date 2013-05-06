@@ -6,7 +6,7 @@ import net.minecraft.world.World
 
 /**
  * @author Freyja
- * Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 class ClientProxy extends CommonProxy {

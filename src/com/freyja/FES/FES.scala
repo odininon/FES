@@ -18,7 +18,7 @@ import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityInjector, Ti
 
 /**
  * @author Freyja
- * Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 @Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", version = "1.0.0")

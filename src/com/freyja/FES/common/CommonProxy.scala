@@ -6,7 +6,7 @@ import net.minecraft.world.World
 
 /**
  * @author Freyja
- * Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class CommonProxy extends IGuiHandler {
   def getServerGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef = {
