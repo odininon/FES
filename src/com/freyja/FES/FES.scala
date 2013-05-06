@@ -17,10 +17,8 @@ import com.freyja.FES.common.blocks.{BlockLine, BlockInjector, BlockReceptacle}
 import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
 
 /**
- *
- * @user Freyja
- * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
- *
+ * @author Freyja
+ * Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 @Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", version = "1.0.0")

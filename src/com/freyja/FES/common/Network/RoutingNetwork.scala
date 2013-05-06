@@ -3,8 +3,8 @@ package com.freyja.FES.common.Network
 import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityReceptacle, TileEntityInjector}
 
 /**
- *
- * @author odininon
+ * @author Freyja
+ * Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class RoutingNetwork {
   private var injectors = List[TileEntityInjector]()
