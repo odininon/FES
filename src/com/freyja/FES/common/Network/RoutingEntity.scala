@@ -8,10 +8,14 @@ trait RoutingEntity {
   private var routingNetwork: RoutingNetwork = new RoutingNetwork()
   routingNetwork.add(this)
 
-  def getNetwork:RoutingNetwork = routingNetwork
+  def getNetwork: RoutingNetwork = routingNetwork
 
   def changeNetwork(network: RoutingNetwork) {
     this.routingNetwork = network
+  }
+
+  def defaultNetwork() {
+    routingNetwork.defaultNetwork(this)
   }
 
   def sameNetwork(te: RoutingEntity): Boolean = {

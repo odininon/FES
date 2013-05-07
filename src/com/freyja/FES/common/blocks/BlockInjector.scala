@@ -5,7 +5,6 @@ import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
-import com.freyja.FES.common.Network.RoutingEntity
 import net.minecraft.entity.player.EntityPlayer
 
 /**
@@ -23,31 +22,12 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
     super.breakBlock(world, x, y, z, par5, par6)
   }
 
-  override def onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, meta: Int) {
+  override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
 
-    val otherTe = (for (
-      i <- -1 to 1;
-      j <- -1 to 1;
-      k <- -1 to 1
-    ) yield world.getBlockTileEntity(x + i, y + j, z + k)).toList.flatMap(x => x match {
-      case `te` => None
-      case x: RoutingEntity => Some(x)
-      case _ => None
-    })
-    if (otherTe == null) return
-
-    for (entity <- otherTe) {
-      te.changeNetwork(te.getNetwork.mergeNetworks(entity.getNetwork))
-      entity.changeNetwork(te.getNetwork)
-    }
-  }
-
-  override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
-    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[RoutingEntity]
-
     if (world.isRemote)
-      player.addChatMessage(te.networkInfo)
+      for (string <- te.reportConnections())
+        player.addChatMessage(string)
     true
   }
 }
