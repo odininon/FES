@@ -117,5 +117,6 @@ object FES {
   @Init
   def init(event: FMLInitializationEvent) {
     NetworkRegistry.instance().registerGuiHandler(this, proxy)
+    proxy.registerTESRS()
   }
 }

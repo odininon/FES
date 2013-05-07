@@ -26,8 +26,7 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
 
     if (world.isRemote)
-      for (string <- te.reportConnections())
-        player.addChatMessage(string)
+        player.addChatMessage(te.getNetwork.info())
     true
   }
 }

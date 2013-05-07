@@ -17,7 +17,7 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLine]
-    te.propergateDeletion()
+    te.propagateDeletion()
 
     super.breakBlock(world, x, y, z, par5, par6)
   }
@@ -26,8 +26,7 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLine]
 
     if (world.isRemote)
-      for (string <- te.reportConnections())
-        player.addChatMessage(string)
+      player.addChatMessage(te.getNetwork.info())
     true
   }
 }

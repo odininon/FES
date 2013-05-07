@@ -17,7 +17,7 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityReceptacle]
-    te.getNetwork.remove(te)
+    te.propagateDeletion()
 
     super.breakBlock(world, x, y, z, par5, par6)
   }
@@ -26,8 +26,7 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityReceptacle]
 
     if (world.isRemote)
-      for (string <- te.reportConnections())
-        player.addChatMessage(string)
+      player.addChatMessage(te.getNetwork.info())
     true
   }
 }

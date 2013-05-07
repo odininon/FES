@@ -2,19 +2,20 @@ package com.freyja.FES.common.inventories
 
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.item.ItemStack
-import com.freyja.FES.common.Network.RoutingEntity
 import net.minecraft.inventory.IInventory
 import net.minecraftforge.common.ForgeDirection
 import com.freyja.FES.common.utils.Position
+import com.freyja.FES.common.Network.RoutingEntity
 
 /**
  * @author Freyja
- * Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class TileEntityReceptacle extends TileEntity with RoutingEntity {
   private var connectedInventory: IInventory = null
   private var orientation: ForgeDirection = ForgeDirection.UP
 
+  getNetwork.defaultNetwork(this)
   def canAcceptItemStack(itemStack: ItemStack): Boolean = {
     connectedInventory != null && getNumberOfStacks < connectedInventory.getSizeInventory
   }
@@ -35,12 +36,13 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
       connectedInventory.setInventorySlotContents(i, itemStack)
       return
     }
-
   }
 
   override def updateEntity() {
-    checkConnectedInventory()
-    checkNetwork()
+    if (this.worldObj.getTotalWorldTime % 10L == 0L) {
+      checkConnectedInventory()
+      checkNetwork()
+    }
   }
 
   def checkNetwork() {
@@ -50,12 +52,18 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
     val te = worldObj.getBlockTileEntity(pos.x.toInt, pos.y.toInt, pos.z.toInt)
 
     te match {
-      case null => this.defaultNetwork()
-      case te: RoutingEntity => if (!te.isInstanceOf[TileEntityReceptacle] && this.getNetwork != te.getNetwork) {
-        te.getNetwork.mergeNetworks(this.getNetwork)
-        this.changeNetwork(te.getNetwork)
+      case null => getNetwork.defaultNetwork(this)
+      case te: RoutingEntity => if (!te.isInstanceOf[RoutingEntity] && !getNetwork.equals(te.getNetwork)) {
+        te.getNetwork.mergeNetworks(getNetwork)
+        this.getNetwork.mergeNetworks(te.getNetwork)
       }
       case _ => None
+    }
+  }
+
+  def propagateDeletion() {
+    for (te <- getNetwork.getAll) {
+      te.getNetwork.remove(this)
     }
   }
 
@@ -65,21 +73,9 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
     val te = worldObj.getBlockTileEntity(pos.x.toInt, pos.y.toInt, pos.z.toInt)
     te match {
-      case null => if (this.connectedInventory != null) this.connectedInventory = null
-      case te: IInventory => if (this.connectedInventory != te) this.connectedInventory = te
+      case null => if (connectedInventory != null) connectedInventory = null
+      case te: IInventory => if (connectedInventory != te) connectedInventory = te
       case _ => None
     }
-  }
-
-  def reportConnections(): List[String] = {
-    var strings: List[String] = List.empty
-    if (connectedInventory == null) {
-      strings ::= "Nothing Connected"
-    } else {
-      strings ::= connectedInventory.toString
-    }
-    strings ::= this.getNetwork.info()
-
-    strings
   }
 }

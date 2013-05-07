@@ -13,5 +13,8 @@ class ClientProxy extends CommonProxy {
   override def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef = {
     ???
   }
+
+  override def registerTESRS() {
+  }
 }
 

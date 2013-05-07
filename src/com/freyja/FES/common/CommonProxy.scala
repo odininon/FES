@@ -14,4 +14,7 @@ class CommonProxy extends IGuiHandler {
   }
 
   def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef = null
+
+
+  def registerTESRS() {}
 }

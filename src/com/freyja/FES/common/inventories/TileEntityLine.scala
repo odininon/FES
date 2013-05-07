@@ -8,11 +8,19 @@ import com.freyja.FES.common.Network.RoutingEntity
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class TileEntityLine extends TileEntity with RoutingEntity {
+  getNetwork.defaultNetwork(this)
 
   override def updateEntity() {
-    checkNetworks()
+    if (this.worldObj.getTotalWorldTime % 10L == 0L) {
+      checkNetworks()
+    }
   }
 
+  def propagateDeletion() {
+    for (te <- routingNetwork.getAll) {
+      te.getNetwork.remove(this)
+    }
+  }
 
   def checkNetworks() {
     val otherTE = ((for (
@@ -27,27 +35,13 @@ class TileEntityLine extends TileEntity with RoutingEntity {
     }
     )
 
-    if (otherTE == null) this.defaultNetwork()
+    if (otherTE == null) getNetwork.defaultNetwork(this)
 
     for (entity <- otherTE) {
-      if (!entity.getNetwork.equals(this.getNetwork)) {
-        entity.getNetwork.mergeNetworks(this.getNetwork)
-        this.changeNetwork(entity.getNetwork)
+      if (!entity.getNetwork.equals(getNetwork)) {
+        entity.getNetwork.mergeNetworks(getNetwork)
+        getNetwork.mergeNetworks(entity.getNetwork)
       }
     }
-
-
   }
-
-  def propergateDeletion() {
-
-  }
-
-
-  def reportConnections(): List[String] = {
-    var strings: List[String] = List.empty
-    strings ::= this.getNetwork.info()
-    strings
-  }
-
 }
