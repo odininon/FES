@@ -53,6 +53,15 @@ public class Position {
         z = tile.zCoord;
     }
 
+    public Position(TileEntity tile, ForgeDirection orientation)
+    {
+        x = tile.xCoord;
+        y = tile.yCoord;
+        z = tile.zCoord;
+
+        this.orientation = orientation;
+    }
+
     public void moveRight(double step)
     {
         switch (orientation) {

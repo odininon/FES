@@ -5,8 +5,18 @@ package com.freyja.FES.common.Network
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 trait RoutingEntity {
-  var routingNetwork: RoutingNetwork = new RoutingNetwork()
+  private val routingNetwork: RoutingNetwork = new RoutingNetwork()
 
   def getNetwork = routingNetwork
 
+  def defaultNetwork() {
+    clearNetwork()
+    add(this)
+  }
+
+  def clearNetwork() {}
+
+  def add(obj: this.type) {
+    routingNetwork.add(obj)
+  }
 }

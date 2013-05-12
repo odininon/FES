@@ -15,19 +15,15 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
 
   override def createNewTileEntity(world: World): TileEntity = new TileEntityInjector
 
-  override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
-    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
-    te.getNetwork.remove(te)
-
-    super.breakBlock(world, x, y, z, par5, par6)
-  }
-
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
-    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
-
-    if (world.isRemote)
-        player.addChatMessage(te.getNetwork.info())
-    true
+    if (world.isRemote) {
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
+      player.addChatMessage("Network: " + te.getNetwork)
+      player.addChatMessage("Connections: " + te.getNetwork.count)
+      player.addChatMessage("Inventories: " + te.getConnected)
+      true
+    }
+    false
   }
 }
 
