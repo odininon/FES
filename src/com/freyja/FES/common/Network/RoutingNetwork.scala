@@ -2,6 +2,8 @@ package com.freyja.FES.common.Network
 
 import com.freyja.FES.common.inventories.{TileEntityReceptacle, TileEntityLine, TileEntityInjector}
 import scala.collection.mutable.ListBuffer
+import net.minecraft.item.ItemStack
+import scala.util.Random
 
 
 /**
@@ -31,7 +33,7 @@ class RoutingNetwork {
     for (receptacle <- network.getReceptacles) add(receptacle)
   }
 
-  def count = injectors.length + lines.length + receptacles.length
+  def count = injectors.size + lines.size + receptacles.size
 
   def add(obj: Any) {
     obj match {
@@ -61,5 +63,34 @@ class RoutingNetwork {
     for (receptacle <- getReceptacles) list += receptacle
     for (line <- getLines) list += line
     list
+  }
+
+  def getValidReceptacles(itemStack: ItemStack): List[TileEntityReceptacle] = {
+    val list = ListBuffer.empty[TileEntityReceptacle]
+
+    for (receptacle <- getReceptacles)
+      if (receptacle.canAccept(itemStack)) list += receptacle
+
+    list.toList
+  }
+
+  def hasValidRoute(itemStack: ItemStack): Boolean = {
+    for (receptacle <- getReceptacles) {
+      if (receptacle.canAccept(itemStack)) return true
+    }
+    false
+  }
+
+  def injectItemStack(itemStack: ItemStack, injector: TileEntityInjector, slotNumber: Int): Boolean = {
+    if (hasValidRoute(itemStack)) {
+      injector.removeItem(itemStack, slotNumber)
+
+      val receptacle = (Random.shuffle(getValidReceptacles(itemStack))).head
+      receptacle.addItem(itemStack)
+
+      true
+    } else {
+      false
+    }
   }
 }

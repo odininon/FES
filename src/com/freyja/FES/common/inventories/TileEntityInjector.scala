@@ -5,13 +5,14 @@ import com.freyja.FES.common.Network.RoutingEntity
 import com.freyja.FES.common.utils.Position
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.inventory.IInventory
+import net.minecraft.item.ItemStack
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class TileEntityInjector extends TileEntity with RoutingEntity {
-  private val orientation: ForgeDirection = ForgeDirection.UP
+  private var orientation: ForgeDirection = ForgeDirection.UP
   private var connectedInventory: IInventory = null
 
   add(this)
@@ -19,6 +20,7 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   override def updateEntity() {
     if (worldObj.getTotalWorldTime % 10L == 0L) {
       updateConnections()
+      injectItems()
     }
   }
 
@@ -48,5 +50,37 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
       }
       case _ => None
     }
+  }
+
+  def removeItem(itemStack: ItemStack, slotNumber: Int) {
+    getConnected.setInventorySlotContents(slotNumber, null)
+  }
+
+  def injectItems() {
+    if (getConnected == null) return
+
+    for (
+      slot <- 0 until getConnected.getSizeInventory
+    ) {
+      val itemStack = getConnected.getStackInSlot(slot)
+      val canExtract = true
+      if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot))
+        return
+    }
+  }
+
+  def getOrientation: ForgeDirection = {
+    orientation
+  }
+
+  def rotate() {
+    val currentRotation = orientation.ordinal()
+    var newRotation = currentRotation + 1
+
+    if (newRotation >= ForgeDirection.VALID_DIRECTIONS.length) newRotation = 0
+
+    orientation = ForgeDirection.VALID_DIRECTIONS(newRotation)
+
+
   }
 }
