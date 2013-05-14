@@ -4,8 +4,9 @@ import net.minecraft.tileentity.TileEntity
 import com.freyja.FES.common.Network.RoutingEntity
 import com.freyja.FES.common.utils.Position
 import net.minecraftforge.common.ForgeDirection
-import net.minecraft.inventory.IInventory
+import net.minecraft.inventory.{ISidedInventory, IInventory}
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
 
 /**
  * @author Freyja
@@ -53,19 +54,36 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   }
 
   def removeItem(itemStack: ItemStack, slotNumber: Int) {
-    getConnected.setInventorySlotContents(slotNumber, null)
+    getConnected.decrStackSize(slotNumber, itemStack.stackSize)
+    getConnected.onInventoryChanged()
   }
 
   def injectItems() {
     if (getConnected == null) return
 
-    for (
-      slot <- 0 until getConnected.getSizeInventory
-    ) {
-      val itemStack = getConnected.getStackInSlot(slot)
-      val canExtract = true
-      if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot))
-        return
+    getConnected match {
+      case x: ISidedInventory => {
+        for (slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())) {
+          val tempStack = getConnected.getStackInSlot(slot)
+          if (tempStack != null) {
+            val itemStack = tempStack.copy
+            itemStack.stackSize = 1
+            val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal())
+            if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot)) return
+          }
+        }
+      }
+      case x: IInventory => {
+        for (slot <- 0 until x.getSizeInventory) {
+          val tempStack = getConnected.getStackInSlot(slot)
+          if (tempStack != null) {
+            val itemStack = tempStack.copy
+            itemStack.stackSize = 1
+            val canExtract = true
+            if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot)) return
+          }
+        }
+      }
     }
   }
 
@@ -80,7 +98,6 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
     if (newRotation >= ForgeDirection.VALID_DIRECTIONS.length) newRotation = 0
 
     orientation = ForgeDirection.VALID_DIRECTIONS(newRotation)
-
 
   }
 }

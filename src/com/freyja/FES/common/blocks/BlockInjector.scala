@@ -16,13 +16,10 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
   override def createNewTileEntity(world: World): TileEntity = new TileEntityInjector
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
-    if (world.isRemote) {
-      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
-      te.rotate()
-      player.swingItem()
-      true
-    }
-    false
+    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
+    te.rotate()
+    player.swingItem()
+    true
   }
 
   override def renderAsNormalBlock(): Boolean = false
