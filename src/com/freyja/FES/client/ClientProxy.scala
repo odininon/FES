@@ -20,8 +20,8 @@ class ClientProxy extends CommonProxy {
   }
 
   override def registerTESRS() {
-     ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileEntityInjector], new TileEntityRendererInjector())
-     MinecraftForgeClient.registerItemRenderer(FES.blockInjectorId, new ItemRenderInjector)
+    ClientRegistry.bindTileEntitySpecialRenderer(classOf[TileEntityInjector], new TileEntityRendererInjector())
+    MinecraftForgeClient.registerItemRenderer(FES.blockInjectorId, new ItemRenderInjector)
   }
 }
 

@@ -6,7 +6,9 @@ import com.freyja.FES.common.utils.Position
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.inventory.{ISidedInventory, IInventory}
 import net.minecraft.item.ItemStack
+import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.network.INetworkManager
 
 /**
  * @author Freyja
@@ -16,6 +18,8 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   private var orientation: ForgeDirection = ForgeDirection.UP
   private var connectedInventory: IInventory = null
 
+  private var pullItemStacks = true
+
   add(this)
 
   override def updateEntity() {
@@ -23,6 +27,38 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
       updateConnections()
       injectItems()
     }
+  }
+
+
+  override def writeToNBT(par1NBTTagCompound: NBTTagCompound) {
+    super.writeToNBT(par1NBTTagCompound)
+    writeCustomNBT(par1NBTTagCompound)
+  }
+
+
+  override def readFromNBT(par1NBTTagCompound: NBTTagCompound) {
+    super.readFromNBT(par1NBTTagCompound)
+    readCustomNBT(par1NBTTagCompound)
+  }
+
+  override def getDescriptionPacket: Packet = {
+    val tag: NBTTagCompound = new NBTTagCompound()
+    writeCustomNBT(tag)
+    new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag)
+  }
+
+  def writeCustomNBT(tag: NBTTagCompound) {
+    tag.setInteger("Orientation", orientation.ordinal())
+    tag.setBoolean("PullItemStacks", pullItemStacks)
+  }
+
+  override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
+    readCustomNBT(pkt.customParam1)
+  }
+
+  def readCustomNBT(tag: NBTTagCompound) {
+    orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
+    pullItemStacks = tag.getBoolean("PullItemStacks")
   }
 
   def getConnected = connectedInventory
@@ -67,7 +103,10 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
           val tempStack = getConnected.getStackInSlot(slot)
           if (tempStack != null) {
             val itemStack = tempStack.copy
-            itemStack.stackSize = 1
+            itemStack.stackSize = pullItemStacks match {
+              case false => 1
+              case true => tempStack.stackSize
+            }
             val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal())
             if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot)) return
           }
@@ -78,7 +117,10 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
           val tempStack = getConnected.getStackInSlot(slot)
           if (tempStack != null) {
             val itemStack = tempStack.copy
-            itemStack.stackSize = 1
+            itemStack.stackSize = pullItemStacks match {
+              case false => 1
+              case true => tempStack.stackSize
+            }
             val canExtract = true
             if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot)) return
           }
