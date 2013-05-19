@@ -6,13 +6,16 @@ import net.minecraftforge.common.ForgeDirection
 import net.minecraft.inventory.{ISidedInventory, IInventory}
 import com.freyja.FES.common.utils.Position
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
+import net.minecraft.network.INetworkManager
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class TileEntityReceptacle extends TileEntity with RoutingEntity {
-  private val orientation: ForgeDirection = ForgeDirection.UP
+  private var orientation: ForgeDirection = ForgeDirection.UP
   private var connectedInventory: IInventory = null
 
   add(this)
@@ -21,6 +24,35 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
     if (worldObj.getTotalWorldTime % 10L == 0L) {
       updateConnections()
     }
+  }
+
+  override def writeToNBT(par1NBTTagCompound: NBTTagCompound) {
+    super.writeToNBT(par1NBTTagCompound)
+    writeCustomNBT(par1NBTTagCompound)
+  }
+
+
+  override def readFromNBT(par1NBTTagCompound: NBTTagCompound) {
+    super.readFromNBT(par1NBTTagCompound)
+    readCustomNBT(par1NBTTagCompound)
+  }
+
+  override def getDescriptionPacket: Packet = {
+    val tag: NBTTagCompound = new NBTTagCompound()
+    writeCustomNBT(tag)
+    new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag)
+  }
+
+  def writeCustomNBT(tag: NBTTagCompound) {
+    tag.setInteger("Orientation", orientation.ordinal())
+  }
+
+  override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
+    readCustomNBT(pkt.customParam1)
+  }
+
+  def readCustomNBT(tag: NBTTagCompound) {
+    orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
   }
 
   def getConnected = connectedInventory
@@ -141,5 +173,18 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
         false
       }
     }
+  }
+
+  def getOrientation: ForgeDirection = {
+    orientation
+  }
+
+  def rotate() {
+    val currentRotation = orientation.ordinal()
+    var newRotation = currentRotation + 1
+
+    if (newRotation >= ForgeDirection.VALID_DIRECTIONS.length) newRotation = 0
+
+    orientation = ForgeDirection.VALID_DIRECTIONS(newRotation)
   }
 }

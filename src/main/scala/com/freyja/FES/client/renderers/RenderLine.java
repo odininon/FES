@@ -30,31 +30,34 @@ public class RenderLine implements ISimpleBlockRenderingHandler {
         double quarter = (1D / 16D) * 4D;
         double eighth = (1D / 16D) * 2D;
 
-        renderer.setRenderBounds(quarter + eighth, quarter + eighth, quarter + eighth, 1.0D - (quarter + eighth), 1.0D - (quarter + eighth), 1.0D - (quarter + eighth));
+        double min = quarter + eighth;
+        double max = 1 - (min);
+
+        renderer.setRenderBounds(min, min, min, max, max, max);
         renderer.renderStandardBlock(block, x, y, z);
 
         if (directions[0]) {
-            renderer.setRenderBounds(quarter + eighth, 0, quarter + eighth, 1.0D - (quarter + eighth), 1.0D - (quarter + eighth), 1.0D - (quarter + eighth));
+            renderer.setRenderBounds(min, 0, min, max, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
         if (directions[1]) {
-            renderer.setRenderBounds(quarter + eighth, quarter + eighth, quarter + eighth, 1.0D - (quarter + eighth), 1.0D, 1.0D - (quarter + eighth));
+            renderer.setRenderBounds(min, min, min, max, 1.0D, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
         if (directions[2]) {
-            renderer.setRenderBounds(quarter + eighth, quarter + eighth, 0, 1.0D - (quarter + eighth), 1.0D - (quarter + eighth), 1.0D - (quarter + eighth));
+            renderer.setRenderBounds(min, min, 0, max, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
         if (directions[3]) {
-            renderer.setRenderBounds(quarter + eighth, quarter + eighth, quarter + eighth, 1.0D - (quarter + eighth), 1.0D - (quarter + eighth), 1.0D);
+            renderer.setRenderBounds(min, min, min, max, max, 1.0D);
             renderer.renderStandardBlock(block, x, y, z);
         }
         if (directions[4]) {
-            renderer.setRenderBounds(0, quarter + eighth, quarter + eighth, 1.0D - (quarter + eighth), 1.0D - (quarter + eighth), 1.0D - (quarter + eighth));
+            renderer.setRenderBounds(0, min, min, max, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
         if (directions[5]) {
-            renderer.setRenderBounds(quarter + eighth, quarter + eighth, quarter + eighth, 1.0D, 1.0D - (quarter + eighth), 1.0D - (quarter + eighth));
+            renderer.setRenderBounds(min, min, min, 1.0D, max, max);
             renderer.renderStandardBlock(block, x, y, z);
         }
 

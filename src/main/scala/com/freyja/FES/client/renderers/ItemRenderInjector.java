@@ -49,7 +49,7 @@ public class ItemRenderInjector implements IItemRenderer {
         GL11.glTranslatef(x, y, z);
         GL11.glScalef(scale, scale, scale);
         GL11.glRotatef(180f, 0f, 1f, 0f);
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture("/textures/injector.png");
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/FES/textures/injector.png");
         modelInjector.render();
 
         GL11.glEnable(GL11.GL_LIGHTING);

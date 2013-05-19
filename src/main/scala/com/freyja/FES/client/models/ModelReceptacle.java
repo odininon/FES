@@ -1,6 +1,6 @@
 package com.freyja.FES.client.models;
 
-import com.freyja.FES.common.inventories.TileEntityInjector;
+import com.freyja.FES.common.inventories.TileEntityReceptacle;
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.model.ModelBase;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -12,20 +12,20 @@ import org.lwjgl.opengl.GL11;
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-public class ModelInjector extends ModelBase {
-    private IModelCustom modelInjector;
+public class ModelReceptacle extends ModelBase {
+    private IModelCustom modelReceptacle;
 
-    public ModelInjector()
+    public ModelReceptacle()
     {
-        modelInjector = AdvancedModelLoader.loadModel("/models/injector.obj");
+        modelReceptacle = AdvancedModelLoader.loadModel("/mods/FES/models/injector.obj");
     }
 
     public void render()
     {
-        modelInjector.renderAll();
+        modelReceptacle.renderAll();
     }
 
-    public void render(TileEntityInjector te, double x, double y, double z)
+    public void render(TileEntityReceptacle te, double x, double y, double z)
     {
         GL11.glPushMatrix();
 
@@ -61,14 +61,9 @@ public class ModelInjector extends ModelBase {
 
         GL11.glScalef(0.5f, 0.5f, 0.5f);
 
-        FMLClientHandler.instance().
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture("/mods/FES/textures/receptacle.png");
 
-                getClient()
-
-                .renderEngine.bindTexture("/textures/injector.png");
-        this.
-
-                render();
+        this.render();
 
         GL11.glPopMatrix();
     }

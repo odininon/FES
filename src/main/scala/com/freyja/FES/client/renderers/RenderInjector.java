@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-public class TileEntityRendererInjector extends TileEntitySpecialRenderer {
+public class RenderInjector extends TileEntitySpecialRenderer {
     private ModelInjector modelInjector = new ModelInjector();
 
     @Override

@@ -1,6 +1,6 @@
 package com.freyja.FES.common.blocks
 
-import com.freyja.FES.common.inventories.{TileEntityInjector, TileEntityLine}
+import com.freyja.FES.common.inventories.{TileEntityReceptacle, TileEntityInjector, TileEntityLine}
 import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
@@ -43,6 +43,7 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
 
     tileEntity match {
       case x: TileEntityInjector => x.getOrientation eq ForgeDirection.getOrientation(direction)
+      case x: TileEntityReceptacle => x.getOrientation eq ForgeDirection.getOrientation(direction)
       case x: RoutingEntity => true
       case _ => false
     }
