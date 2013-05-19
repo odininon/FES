@@ -92,7 +92,7 @@ object FES {
     registerObject(blockInjector, "Injector")
     GameRegistry.registerTileEntity(classOf[TileEntityInjector], "Injector")
 
-    blockLine = new BlockLine(blockLineId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("line")
+    blockLine = new BlockLine(blockLineId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("FES:line")
     registerObject(blockLine, "Line")
     GameRegistry.registerTileEntity(classOf[TileEntityLine], "Line")
   }

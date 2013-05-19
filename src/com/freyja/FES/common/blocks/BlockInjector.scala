@@ -18,11 +18,21 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
     val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
     te.rotate()
+
+    world.notifyBlockChange(x + 1, y, z, this.blockId)
+    world.notifyBlockChange(x - 1, y, z, this.blockId)
+    world.notifyBlockChange(x, y + 1, z, this.blockId)
+    world.notifyBlockChange(x, y - 1, z, this.blockId)
+    world.notifyBlockChange(x, y, z + 1, this.blockId)
+    world.notifyBlockChange(x, y, z - 1, this.blockId)
+
     player.swingItem()
     true
   }
 
-  override def renderAsNormalBlock(): Boolean = false
+  override def renderAsNormalBlock(): Boolean = true
+
+  override def isOpaqueCube: Boolean = false
 
   override def getRenderType: Int = -1
 
