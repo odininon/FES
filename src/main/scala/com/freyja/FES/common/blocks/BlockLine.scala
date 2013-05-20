@@ -5,10 +5,10 @@ import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
-import com.freyja.FES.common.utils.Position
 import net.minecraftforge.common.ForgeDirection
 import com.freyja.FES.client.renderers.RenderLine
 import com.freyja.FES.common.Network.RoutingEntity
+import com.freyja.FES.utils.Position
 
 /**
  * @author Freyja

@@ -1,0 +1,19 @@
+[
+{
+    "modid": "FES",
+    "name": "Freyja's Easy Sorting",
+    "description": "Freyja's Easy Sorting!",
+    "version": "${buildVersion}",
+    "credits": "Freyja",
+    "logoFile": "",
+    "mcversion": "${minecraft.version}",
+    "url": "",
+    "updateUrl": "",
+    "authors": [ "Freyja" ],
+    "parent":"",
+    "screenshots": [],
+    "dependencies": [
+        "mod_MinecraftForge"
+    ]
+}
+]

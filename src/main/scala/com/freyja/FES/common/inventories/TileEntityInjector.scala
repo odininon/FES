@@ -2,13 +2,13 @@ package com.freyja.FES.common.inventories
 
 import net.minecraft.tileentity.TileEntity
 import com.freyja.FES.common.Network.RoutingEntity
-import com.freyja.FES.common.utils.Position
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.inventory.{ISidedInventory, IInventory}
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.INetworkManager
+import com.freyja.FES.utils.Position
 
 /**
  * @author Freyja

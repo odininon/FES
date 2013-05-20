@@ -1,4 +1,4 @@
-package com.freyja.FES.common.utils;
+package com.freyja.FES.utils;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

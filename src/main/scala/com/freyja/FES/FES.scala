@@ -12,16 +12,17 @@ import net.minecraftforge.common.Configuration
 import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
-import net.minecraft.item.Item
+import net.minecraft.item.{ItemStack, Item}
 import com.freyja.FES.common.blocks.{BlockLine, BlockInjector, BlockReceptacle}
 import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
+import com.freyja.FES.utils.Utils
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-@Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", version = "1.0.0")
+@Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", useMetadata = true)
 @NetworkMod(channels = Array[String] {
   "FES"
 }, clientSideRequired = true, serverSideRequired = false)
@@ -118,5 +119,7 @@ object FES {
   def init(event: FMLInitializationEvent) {
     NetworkRegistry.instance().registerGuiHandler(this, proxy)
     proxy.registerTESRS()
+
+    Utils.RegisterRecipes()
   }
 }

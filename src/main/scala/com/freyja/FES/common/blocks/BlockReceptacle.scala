@@ -31,8 +31,11 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
   }
 
   override def renderAsNormalBlock(): Boolean = true
+
   override def isOpaqueCube: Boolean = false
+
   override def getRenderType: Int = -1
+
   override def hasTileEntity: Boolean = true
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {

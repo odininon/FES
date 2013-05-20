@@ -6,8 +6,6 @@ import net.minecraft.world.World
 import com.freyja.FES.client.renderers._
 import com.freyja.FES.common.inventories.{TileEntityReceptacle, TileEntityInjector}
 import cpw.mods.fml.client.registry.{RenderingRegistry, ClientRegistry}
-import net.minecraftforge.client.MinecraftForgeClient
-import com.freyja.FES.FES
 
 /**
  * @author Freyja

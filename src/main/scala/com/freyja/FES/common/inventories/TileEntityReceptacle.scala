@@ -4,11 +4,11 @@ import net.minecraft.tileentity.TileEntity
 import com.freyja.FES.common.Network.RoutingEntity
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.inventory.{ISidedInventory, IInventory}
-import com.freyja.FES.common.utils.Position
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.network.INetworkManager
+import com.freyja.FES.utils.Position
 
 /**
  * @author Freyja
@@ -125,7 +125,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
       tempStack.setTagCompound(itemStack.getTagCompound)
     }
 
-    val maxIncreaseAmount = itemStack.getMaxStackSize - tempStack.stackSize
+    val maxIncreaseAmount = getConnected.getInventoryStackLimit - tempStack.stackSize
 
     if (maxIncreaseAmount != 0) {
       if (itemStack.stackSize <= maxIncreaseAmount) {
@@ -142,7 +142,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
   def canMerge(itemStack1: ItemStack, itemStack2: ItemStack): Boolean = {
     if (!itemStack1.isItemEqual(itemStack2)) return false
 
-    val maxIncreaseAmount = itemStack1.getMaxStackSize - itemStack1.stackSize
+    val maxIncreaseAmount = getConnected.getInventoryStackLimit - itemStack1.stackSize
 
     maxIncreaseAmount > 0
   }
@@ -162,7 +162,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
       case x: IInventory => {
         val tempStack =
-          (for (slot <- 0 until getConnected.getSizeInventory) yield getConnected.getStackInSlot(slot)).flatMap(x => x match {
+          (for (slot <- 0 until getConnected.getSizeInventory; if !canMerge(getConnected.getStackInSlot(slot), itemStack)) yield getConnected.getStackInSlot(slot)).flatMap(x => x match {
             case null => None
             case _ => Some(x)
           })

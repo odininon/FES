@@ -52,8 +52,7 @@
     </repositories>
 
     <build>
-        <finalName>${artifactId}-${buildVersion}</finalName>
-        <sourceDirectory>src/main/scala</sourceDirectory>
+        <finalName>${project.artifactId}-${buildVersion}</finalName>
         <resources>
             <resource>
                 <directory>resources/</directory>
