@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
+import cpw.mods.fml.common.network.PacketDispatcher
 
 /**
  * @author Freyja
@@ -16,15 +17,20 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
   def createNewTileEntity(world: World): TileEntity = new TileEntityReceptacle
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
-    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityReceptacle]
-    te.rotate()
 
-    world.notifyBlockChange(x + 1, y, z, this.blockId)
-    world.notifyBlockChange(x - 1, y, z, this.blockId)
-    world.notifyBlockChange(x, y + 1, z, this.blockId)
-    world.notifyBlockChange(x, y - 1, z, this.blockId)
-    world.notifyBlockChange(x, y, z + 1, this.blockId)
-    world.notifyBlockChange(x, y, z - 1, this.blockId)
+    if (!world.isRemote) {
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityReceptacle]
+      te.rotate()
+
+      world.notifyBlockChange(x + 1, y, z, this.blockId)
+      world.notifyBlockChange(x - 1, y, z, this.blockId)
+      world.notifyBlockChange(x, y + 1, z, this.blockId)
+      world.notifyBlockChange(x, y - 1, z, this.blockId)
+      world.notifyBlockChange(x, y, z + 1, this.blockId)
+      world.notifyBlockChange(x, y, z - 1, this.blockId)
+
+      PacketDispatcher.sendPacketToAllAround(x, y, z, 64, player.dimension, te.getDescriptionPacket)
+    }
 
     player.swingItem()
     true
