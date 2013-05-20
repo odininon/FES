@@ -140,11 +140,11 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
   }
 
   def canMerge(itemStack1: ItemStack, itemStack2: ItemStack): Boolean = {
-    if (!itemStack1.isItemEqual(itemStack2)) return false
+    if (itemStack1 == null || !itemStack1.isItemEqual(itemStack2)) return false
 
     val maxIncreaseAmount = getConnected.getInventoryStackLimit - itemStack1.stackSize
 
-    maxIncreaseAmount > 0
+    maxIncreaseAmount >= itemStack2.stackSize
   }
 
   def hasRoom(itemStack: ItemStack): Boolean = {

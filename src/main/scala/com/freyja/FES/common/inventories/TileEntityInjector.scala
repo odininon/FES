@@ -108,7 +108,12 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
               case true => tempStack.stackSize
             }
             val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal())
-            if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot)) return
+            if (canExtract && itemStack != null) {
+              while (!getNetwork.injectItemStack(itemStack, this, slot) && itemStack.stackSize > 0) {
+                itemStack.stackSize -= 1
+              }
+              if (itemStack.stackSize > 0) return
+            }
           }
         }
       }
@@ -122,7 +127,12 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
               case true => tempStack.stackSize
             }
             val canExtract = true
-            if (canExtract && itemStack != null && getNetwork.injectItemStack(itemStack, this, slot)) return
+            if (canExtract && itemStack != null) {
+              while (!getNetwork.injectItemStack(itemStack, this, slot) && itemStack.stackSize > 0) {
+                itemStack.stackSize -= 1
+              }
+              if (itemStack.stackSize > 0) return
+            }
           }
         }
       }
