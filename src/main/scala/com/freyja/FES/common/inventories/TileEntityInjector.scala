@@ -9,8 +9,6 @@ import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.INetworkManager
 import com.freyja.FES.utils.Position
-import scala.util.Random
-import cpw.mods.fml.common.network.PacketDispatcher
 
 /**
  * @author Freyja

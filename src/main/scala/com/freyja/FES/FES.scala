@@ -85,15 +85,15 @@ object FES {
     logger.setParent(FMLLog.getLogger)
     _config = initConfigurations(event)
 
-    blockReceptacle = new BlockReceptacle(blockReceptacleId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("receptacle")
+    blockReceptacle = new BlockReceptacle(blockReceptacleId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("receptacle")
     registerObject(blockReceptacle, "Receptacle")
     GameRegistry.registerTileEntity(classOf[TileEntityReceptacle], "Receptacle")
 
-    blockInjector = new BlockInjector(blockInjectorId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("injector")
+    blockInjector = new BlockInjector(blockInjectorId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("injector")
     registerObject(blockInjector, "Injector")
     GameRegistry.registerTileEntity(classOf[TileEntityInjector], "Injector")
 
-    blockLine = new BlockLine(blockLineId, Material.rock).setCreativeTab(creativeTab).setUnlocalizedName("FES:line")
+    blockLine = new BlockLine(blockLineId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:line")
     registerObject(blockLine, "Line")
     GameRegistry.registerTileEntity(classOf[TileEntityLine], "Line")
   }

@@ -41,11 +41,8 @@ trait RoutingEntity {
       if (otherTE.isEmpty) return
 
       val entity = Random.shuffle(otherTE).head
-
-      if (entity != null) {
-        setOrientation(calculateDirection(entity, tileEntity))
-        PacketDispatcher.sendPacketToAllAround(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 64, tileEntity.worldObj.getWorldInfo.getDimension, tileEntity.getDescriptionPacket)
-      }
+      setOrientation(calculateDirection(entity, tileEntity))
+      PacketDispatcher.sendPacketToAllAround(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 64, tileEntity.worldObj.getWorldInfo.getDimension, tileEntity.getDescriptionPacket)
 
       initialized = true
     }
