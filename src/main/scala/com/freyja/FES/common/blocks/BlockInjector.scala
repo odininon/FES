@@ -20,7 +20,7 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
 
     if (!world.isRemote) {
       val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
-      te.rotate()
+      te.rotate(te)
 
       world.notifyBlockChange(x + 1, y, z, this.blockId)
       world.notifyBlockChange(x - 1, y, z, this.blockId)

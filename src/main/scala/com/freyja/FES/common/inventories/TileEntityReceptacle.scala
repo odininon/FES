@@ -15,12 +15,12 @@ import com.freyja.FES.utils.{ModCompatibility, Position}
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class TileEntityReceptacle extends TileEntity with RoutingEntity {
-  private var orientation: ForgeDirection = ForgeDirection.UP
   private var connectedInventory: IInventory = null
 
   add(this)
 
   override def updateEntity() {
+    if (!initialized) initRotate(this)
     if (worldObj.getTotalWorldTime % 10L == 0L) {
       updateConnections()
     }
@@ -45,6 +45,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
   def writeCustomNBT(tag: NBTTagCompound) {
     tag.setInteger("Orientation", orientation.ordinal())
+    tag.setBoolean("Initialized", initialized)
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -53,6 +54,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
   def readCustomNBT(tag: NBTTagCompound) {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
+    initialized = tag.getBoolean("Initialized")
   }
 
   def getConnected = connectedInventory
@@ -189,18 +191,5 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
         false
       }
     }
-  }
-
-  def getOrientation: ForgeDirection = {
-    orientation
-  }
-
-  def rotate() {
-    val currentRotation = orientation.ordinal()
-    var newRotation = currentRotation + 1
-
-    if (newRotation >= ForgeDirection.VALID_DIRECTIONS.length) newRotation = 0
-
-    orientation = ForgeDirection.VALID_DIRECTIONS(newRotation)
   }
 }

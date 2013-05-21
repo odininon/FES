@@ -20,7 +20,7 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
 
     if (!world.isRemote) {
       val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityReceptacle]
-      te.rotate()
+      te.rotate(te)
 
       world.notifyBlockChange(x + 1, y, z, this.blockId)
       world.notifyBlockChange(x - 1, y, z, this.blockId)

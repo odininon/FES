@@ -9,13 +9,14 @@ import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.INetworkManager
 import com.freyja.FES.utils.Position
+import scala.util.Random
+import cpw.mods.fml.common.network.PacketDispatcher
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 class TileEntityInjector extends TileEntity with RoutingEntity {
-  private var orientation: ForgeDirection = ForgeDirection.UP
   private var connectedInventory: IInventory = null
 
   private var pullItemStacks = true
@@ -23,6 +24,7 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   add(this)
 
   override def updateEntity() {
+    if (!initialized) initRotate(this)
     if (worldObj.getTotalWorldTime % 10L == 0L) {
       updateConnections()
       injectItems()
@@ -50,6 +52,7 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   def writeCustomNBT(tag: NBTTagCompound) {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("PullItemStacks", pullItemStacks)
+    tag.setBoolean("Initialized", initialized)
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -59,6 +62,7 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   def readCustomNBT(tag: NBTTagCompound) {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     pullItemStacks = tag.getBoolean("PullItemStacks")
+    initialized = tag.getBoolean("Initialized")
   }
 
   def getConnected = connectedInventory
@@ -137,19 +141,5 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
         }
       }
     }
-  }
-
-  def getOrientation: ForgeDirection = {
-    orientation
-  }
-
-  def rotate() {
-    val currentRotation = orientation.ordinal()
-    var newRotation = currentRotation + 1
-
-    if (newRotation >= ForgeDirection.VALID_DIRECTIONS.length) newRotation = 0
-
-    orientation = ForgeDirection.VALID_DIRECTIONS(newRotation)
-
   }
 }
