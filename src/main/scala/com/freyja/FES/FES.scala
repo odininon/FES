@@ -4,18 +4,18 @@ import cpw.mods.fml.common.{FMLCommonHandler, FMLLog, Mod}
 import cpw.mods.fml.common.network.{NetworkRegistry, NetworkMod}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.block.Block
-import cpw.mods.fml.common.Mod.{Init, PreInit}
-import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
+import cpw.mods.fml.common.Mod.{PostInit, Init, PreInit}
+import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLInitializationEvent, FMLPreInitializationEvent}
 import net.minecraft.block.material.Material
 import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
 import net.minecraftforge.common.Configuration
 import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
-import net.minecraft.item.{ItemStack, Item}
+import net.minecraft.item.Item
 import com.freyja.FES.common.blocks.{BlockLine, BlockInjector, BlockReceptacle}
 import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
-import com.freyja.FES.utils.Utils
+import com.freyja.FES.utils.{ModCompatibility, Utils}
 
 /**
  * @author Freyja
@@ -121,5 +121,10 @@ object FES {
     proxy.registerTESRS()
 
     Utils.RegisterRecipes()
+  }
+
+  @PostInit
+  def postInit(event: FMLPostInitializationEvent) {
+    ModCompatibility.init()
   }
 }

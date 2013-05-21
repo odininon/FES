@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.network.INetworkManager
-import com.freyja.FES.utils.Position
+import com.freyja.FES.utils.{ModCompatibility, Position}
 
 /**
  * @author Freyja
@@ -149,6 +149,22 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
   def hasRoom(itemStack: ItemStack): Boolean = {
     if (getConnected == null) return false
+
+    if (ModCompatibility.isTConstructLoaded) {
+      val height = ModCompatibility.getSmelteryHeight(getConnected)
+      if (height > 0) {
+        val tempStack =
+          (for (slot <- 0 until height * 9; if !canMerge(getConnected.getStackInSlot(slot), itemStack)) yield getConnected.getStackInSlot(slot)).flatMap(x => x match {
+            case null => None
+            case _ => Some(x)
+          })
+
+        if ((height * 9) - tempStack.length >= itemStack.stackSize) {
+          return true
+        }
+        return false
+      }
+    }
 
     getConnected match {
       case x: ISidedInventory => {
