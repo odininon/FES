@@ -79,7 +79,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
       te match {
         case null => None
-        case te: RoutingEntity => if (!te.isInstanceOf[TileEntityInjector] && !this.getNetwork.equals(te.getNetwork)) {
+        case te: RoutingEntity => if (te.isInstanceOf[TileEntityLine] && !this.getNetwork.equals(te.getNetwork)) {
           this.getNetwork.mergeNetworks(te.getNetwork)
           te.getNetwork.mergeNetworks(this.getNetwork)
         }
