@@ -42,8 +42,8 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
     val tileEntity = world.getBlockTileEntity(position.x.toInt, position.y.toInt, position.z.toInt)
 
     tileEntity match {
-      case x: TileEntityInjector => x.getOrientation eq ForgeDirection.getOrientation(direction)
-      case x: TileEntityReceptacle => x.getOrientation eq ForgeDirection.getOrientation(direction)
+      case x: TileEntityInjector => !x.getOrientation.eq(ForgeDirection.getOrientation(direction).getOpposite)
+      case x: TileEntityReceptacle => !x.getOrientation.eq(ForgeDirection.getOrientation(direction).getOpposite)
       case x: RoutingEntity => true
       case _ => false
     }

@@ -66,7 +66,7 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
   def getConnected = connectedInventory
 
   def updateConnections() {
-    val pos = new Position(this, orientation)
+    var pos = new Position(this, orientation)
     pos.moveForwards(1)
 
     var te = worldObj.getBlockTileEntity(pos.x.toInt, pos.y.toInt, pos.z.toInt)
@@ -77,17 +77,20 @@ class TileEntityInjector extends TileEntity with RoutingEntity {
       case _ => None
     }
 
-    pos.moveBackwards(2)
+    for (direction <- ForgeDirection.values(); if !direction.eq(orientation)) {
+      pos = new Position(this, direction)
+      pos.moveForwards(1)
 
-    te = worldObj.getBlockTileEntity(pos.x.toInt, pos.y.toInt, pos.z.toInt)
+      te = worldObj.getBlockTileEntity(pos.x.toInt, pos.y.toInt, pos.z.toInt)
 
-    te match {
-      case null => None
-      case te: RoutingEntity => if (!te.isInstanceOf[TileEntityInjector] && !this.getNetwork.equals(te.getNetwork)) {
-        this.getNetwork.mergeNetworks(te.getNetwork)
-        te.getNetwork.mergeNetworks(this.getNetwork)
+      te match {
+        case null => None
+        case te: RoutingEntity => if (!te.isInstanceOf[TileEntityInjector] && !this.getNetwork.equals(te.getNetwork)) {
+          this.getNetwork.mergeNetworks(te.getNetwork)
+          te.getNetwork.mergeNetworks(this.getNetwork)
+        }
+        case _ => None
       }
-      case _ => None
     }
   }
 
