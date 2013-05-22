@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>mods.freyja</groupId>
     <artifactId>FES</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.4</version>
     <name>FES</name>
     <url>https://github.com/odininon/FES</url>
 
@@ -14,8 +14,8 @@
     </parent>
 
     <properties>
-        <maven.compiler.source>1.5</maven.compiler.source>
-        <maven.compiler.target>1.5</maven.compiler.target>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <scala.version>2.10.1</scala.version>
     </properties>
 
