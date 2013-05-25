@@ -9,13 +9,14 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.network.INetworkManager
 import com.freyja.FES.utils.{ModCompatibility, Position}
+import scala.collection.mutable.ListBuffer
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-class TileEntityReceptacle extends TileEntity with RoutingEntity {
-  private var connectedInventory: IInventory = null
+class TileEntityReceptacle extends RoutingEntity {
+  private var otherInventories: ListBuffer[TileEntity] = ListBuffer.empty[TileEntity]
 
   add(this)
 
@@ -23,6 +24,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
     if (!initialized) initRotate(this)
     if (worldObj.getTotalWorldTime % 10L == 0L) {
       updateConnections()
+      inject()
     }
   }
 
@@ -57,8 +59,6 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
     initialized = tag.getBoolean("Initialized")
   }
 
-  def getConnected = connectedInventory
-
   def updateConnections() {
     var pos = new Position(this, orientation)
     pos.moveForwards(1)
@@ -79,6 +79,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
       te match {
         case null => None
+        case te: IInventory => if (!otherInventories.contains(te) && !te.equals(connectedInventory)) otherInventories += te
         case te: RoutingEntity => if (te.isInstanceOf[TileEntityLine] && !this.getNetwork.equals(te.getNetwork)) {
           this.getNetwork.mergeNetworks(te.getNetwork)
           te.getNetwork.mergeNetworks(this.getNetwork)
@@ -86,6 +87,10 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
         case _ => None
       }
     }
+  }
+
+  def clearOthers() {
+    otherInventories.clear()
   }
 
   def canAccept(itemStack: ItemStack): Boolean = {
@@ -97,7 +102,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
       case x: ISidedInventory => {
         for (
           slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())
-          if getConnected.getStackInSlot(slot) == null || getConnected.getStackInSlot(slot).isItemEqual(itemStack)
+          if x.getStackInSlot(slot) == null || x.getStackInSlot(slot).isItemEqual(itemStack)
         ) {
           if (x.func_102007_a(slot, itemStack, orientation.getOpposite.ordinal())) {
             merge(itemStack, slot)
@@ -109,8 +114,8 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
       }
       case x: IInventory => {
         for (
-          slot <- 0 until getConnected.getSizeInventory
-          if getConnected.getStackInSlot(slot) == null || getConnected.getStackInSlot(slot).isItemEqual(itemStack)
+          slot <- 0 until x.getSizeInventory
+          if x.getStackInSlot(slot) == null || x.getStackInSlot(slot).isItemEqual(itemStack)
         ) {
           merge(itemStack, slot)
           if (itemStack.stackSize <= 0) {
@@ -123,14 +128,14 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
   }
 
   def merge(itemStack: ItemStack, slot: Int) {
-    val stack = Option(getConnected.getStackInSlot(slot)) getOrElse (new ItemStack(itemStack.getItem, 0))
+    val stack = Option(getConnected.asInstanceOf[IInventory].getStackInSlot(slot)) getOrElse (new ItemStack(itemStack.getItem, 0))
     val tempStack = stack.copy()
 
     if (itemStack.hasTagCompound) {
       tempStack.setTagCompound(itemStack.getTagCompound)
     }
 
-    val maxIncreaseAmount = getConnected.getInventoryStackLimit - tempStack.stackSize
+    val maxIncreaseAmount = getConnected.asInstanceOf[IInventory].getInventoryStackLimit - tempStack.stackSize
 
     if (maxIncreaseAmount != 0) {
       if (itemStack.stackSize <= maxIncreaseAmount) {
@@ -140,14 +145,14 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
         tempStack.stackSize += maxIncreaseAmount
         itemStack.stackSize -= maxIncreaseAmount
       }
-      getConnected.setInventorySlotContents(slot, tempStack)
+      getConnected.asInstanceOf[IInventory].setInventorySlotContents(slot, tempStack)
     }
   }
 
   def canMerge(itemStack1: ItemStack, itemStack2: ItemStack): Boolean = {
     if (itemStack1 == null || !itemStack1.isItemEqual(itemStack2)) return false
 
-    val maxIncreaseAmount = getConnected.getInventoryStackLimit - itemStack1.stackSize
+    val maxIncreaseAmount = getConnected.asInstanceOf[IInventory].getInventoryStackLimit - itemStack1.stackSize
 
     maxIncreaseAmount >= itemStack2.stackSize
   }
@@ -159,7 +164,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
       val height = ModCompatibility.getSmelteryHeight(getConnected)
       if (height > 0) {
         val tempStack =
-          (for (slot <- 0 until height * 9; if !canMerge(getConnected.getStackInSlot(slot), itemStack)) yield getConnected.getStackInSlot(slot)).flatMap(x => x match {
+          (for (slot <- 0 until height * 9; if !canMerge(getConnected.asInstanceOf[IInventory].getStackInSlot(slot), itemStack)) yield getConnected.asInstanceOf[IInventory].getStackInSlot(slot)).flatMap(x => x match {
             case null => None
             case _ => Some(x)
           })
@@ -175,7 +180,7 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
       case x: ISidedInventory => {
         for (slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())) {
           if (x.func_102007_a(slot, itemStack, orientation.getOpposite.ordinal())) {
-            if (getConnected.getStackInSlot(slot) == null || canMerge(getConnected.getStackInSlot(slot), itemStack)) return true
+            if (getConnected.asInstanceOf[IInventory].getStackInSlot(slot) == null || canMerge(getConnected.asInstanceOf[IInventory].getStackInSlot(slot), itemStack)) return true
           }
         }
         false
@@ -183,16 +188,23 @@ class TileEntityReceptacle extends TileEntity with RoutingEntity {
 
       case x: IInventory => {
         val tempStack =
-          (for (slot <- 0 until getConnected.getSizeInventory; if !canMerge(getConnected.getStackInSlot(slot), itemStack)) yield getConnected.getStackInSlot(slot)).flatMap(x => x match {
+          (for (slot <- 0 until getConnected.asInstanceOf[IInventory].getSizeInventory; if !canMerge(getConnected.asInstanceOf[IInventory].getStackInSlot(slot), itemStack)) yield getConnected.asInstanceOf[IInventory].getStackInSlot(slot)).flatMap(x => x match {
             case null => None
             case _ => Some(x)
           })
 
-        if (tempStack.length < getConnected.getSizeInventory) {
+        if (tempStack.length < getConnected.asInstanceOf[IInventory].getSizeInventory) {
           return true
         }
         false
       }
     }
   }
+
+  def inject() {
+    for (inventory <- otherInventories) {
+      injectItems(inventory)
+    }
+  }
+
 }

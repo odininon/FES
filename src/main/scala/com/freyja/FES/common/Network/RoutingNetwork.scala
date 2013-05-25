@@ -4,6 +4,7 @@ import com.freyja.FES.common.inventories.{TileEntityReceptacle, TileEntityLine, 
 import scala.collection.mutable.ListBuffer
 import net.minecraft.item.ItemStack
 import scala.util.Random
+import net.minecraft.inventory.IInventory
 
 
 /**
@@ -45,9 +46,9 @@ class RoutingNetwork {
 
   def remove(obj: Any) {
     obj match {
-      case te: TileEntityInjector => injectors -= te
-      case te: TileEntityLine => lines -= te
-      case te: TileEntityReceptacle => receptacles -= te
+      case te: TileEntityInjector => injectors.clear()
+      case te: TileEntityLine => lines.clear()
+      case te: TileEntityReceptacle => receptacles.clear()
     }
   }
 
@@ -81,9 +82,9 @@ class RoutingNetwork {
     false
   }
 
-  def injectItemStack(itemStack: ItemStack, injector: TileEntityInjector, slotNumber: Int): Boolean = {
+  def injectItemStack(itemStack: ItemStack, injector: RoutingEntity, slotNumber: Int, inventory: IInventory): Boolean = {
     if (hasValidRoute(itemStack)) {
-      injector.removeItem(itemStack, slotNumber)
+      injector.removeItem(itemStack, slotNumber, inventory)
 
       val receptacle = (Random.shuffle(getValidReceptacles(itemStack))).head
       receptacle.addItem(itemStack)
