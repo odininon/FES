@@ -1,6 +1,6 @@
 package com.freyja.FES.RoutingSettings;
 
-import com.freyja.FES.utils.FreyjaGameData;
+import com.freyja.core.utils.FreyjaGameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;

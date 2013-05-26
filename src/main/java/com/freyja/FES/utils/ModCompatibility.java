@@ -3,6 +3,7 @@ package com.freyja.FES.utils;
 import com.freyja.FES.FES;
 import com.freyja.FES.RoutingSettings.ModSortSettings;
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
+import com.freyja.core.utils.FreyjaGameData;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 
@@ -63,11 +64,16 @@ public class ModCompatibility {
         RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings("Vanilla"));
 
         for (ModContainer mod : Loader.instance().getModList()) {
-            if (!forbiddenMods.contains(mod.getModId())) {
+            if (!forbiddenMods.contains(mod.getModId()) && !mod.isImmutable()) {
                 FES.logger().fine("Registering Routing Setting for " + mod.getName() + ".");
                 RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings(mod.getModId()));
             }
         }
+    }
+
+    public static void buildModObjectTable()
+    {
+        FreyjaGameData.buildModObjectTable();
     }
 
 }

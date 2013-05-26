@@ -8,23 +8,23 @@ import cpw.mods.fml.common.Mod.{PostInit, Init, PreInit}
 import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLInitializationEvent, FMLPreInitializationEvent}
 import net.minecraft.block.material.Material
 import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
-import net.minecraftforge.common.Configuration
 import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.item.Item
 import com.freyja.FES.common.blocks.{BlockPlayerInventory, BlockLine, BlockInjector, BlockReceptacle}
 import com.freyja.FES.common.inventories.{TileEntityPlayerInventory, TileEntityLine, TileEntityInjector, TileEntityReceptacle}
-import com.freyja.FES.utils.{FreyjaGameData, ModCompatibility, Utils}
+import com.freyja.FES.utils.{ModCompatibility, Utils}
 import com.freyja.FES.common.packets.PacketHandler
 import com.freyja.FES.RoutingSettings.{NoneSetting, SmeltablesSettings, DefaultRoutingSetting, RoutingSettingsRegistry}
+import net.minecraftforge.common.Configuration
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-@Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", useMetadata = true)
+@Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", useMetadata = true, dependencies = "required-after:Freyja_core")
 @NetworkMod(channels = Array[String] {
   "FES"
 }, clientSideRequired = true, serverSideRequired = false, packetHandler = classOf[PacketHandler])
@@ -136,7 +136,7 @@ object FES {
 
   @PostInit
   def postInit(event: FMLPostInitializationEvent) {
-    FreyjaGameData.buildModObjectTable()
+    ModCompatibility.buildModObjectTable()
 
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new NoneSetting())
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting())
