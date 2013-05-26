@@ -32,7 +32,7 @@ class ClientProxy extends CommonProxy {
 
   override def openLocalGui(guiID: Int, x: Int, y: Int, z: Int) {
     guiID match {
-     case 0 => FMLClientHandler.instance().getClient.displayGuiScreen(new RoutingSettings(getWorld.getBlockTileEntity(x,y,z).asInstanceOf[RoutingEntity]))
+      case 0 => FMLClientHandler.instance().getClient.displayGuiScreen(new RoutingSettings(getWorld.getBlockTileEntity(x, y, z).asInstanceOf[RoutingEntity]))
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.freyja.FES.RoutingSettings;
 
+import com.freyja.FES.utils.FreyjaGameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -25,16 +26,17 @@ public class ModSortSettings implements IRoutingSetting {
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
+        //Checks Blocks
         String str = itemStack.getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
-        if (GameRegistry.findBlock(modId, str) != null || GameRegistry.findItem(modId, str) != null) {
+        if (GameRegistry.findBlock(modId, str) != null) {
             return true;
         } else {
             str = new ItemStack(itemStack.copy().getItem(), 0, 0).getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
-            if (GameRegistry.findBlock(modId, str) != null || GameRegistry.findItem(modId, str) != null) {
+            if (GameRegistry.findBlock(modId, str) != null) {
                 return true;
             } else {
                 str = itemStack.getItem().getClass().getName();
-                if (GameRegistry.findBlock(modId, str) != null || GameRegistry.findItem(modId, str) != null) {
+                if (GameRegistry.findBlock(modId, str) != null) {
                     return true;
                 } else {
                     if (itemStack.getItem().getClass().getName().equals("net.minecraft.item.ItemBlock")) {
@@ -48,6 +50,23 @@ public class ModSortSettings implements IRoutingSetting {
             }
         }
 
+        //Checks Items
+        str = itemStack.getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
+        if (FreyjaGameData.findItem(modId, str) != null) {
+            return true;
+        } else {
+            str = new ItemStack(itemStack.copy().getItem(), 0, 0).getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
+            if (FreyjaGameData.findItem(modId, str) != null) {
+                return true;
+            } else {
+                str = itemStack.getItem().getClass().getName();
+                if (FreyjaGameData.findItem(modId, str) != null) {
+                    return true;
+                }
+            }
+        }
+
+        //Checks Vanilla
         if (modId.equalsIgnoreCase("Vanilla")) {
             if (itemStack.getItem().getClass().getName().equals("net.minecraft.item.ItemBlock")) {
                 Block block = Block.blocksList[itemStack.itemID];

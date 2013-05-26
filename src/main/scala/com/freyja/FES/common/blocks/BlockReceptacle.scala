@@ -9,8 +9,6 @@ import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.Network.RoutingEntity
 import com.freyja.FES.common.packets.PacketPurgeNetwork
-import cpw.mods.fml.client.FMLClientHandler
-import com.freyja.FES.client.gui.RoutingSettings
 import com.freyja.FES.FES
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
