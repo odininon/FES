@@ -1,6 +1,7 @@
 package com.freyja.FES.RoutingSettings;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -25,6 +26,36 @@ public class ModSortSettings implements IRoutingSetting {
     public boolean isItemValid(ItemStack itemStack)
     {
         String str = itemStack.getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
-        return GameRegistry.findBlock(modId, str) != null && GameRegistry.findItem(modId, str) != null;
+        if (GameRegistry.findBlock(modId, str) != null || GameRegistry.findItem(modId, str) != null) {
+            return true;
+        } else {
+            str = new ItemStack(itemStack.copy().getItem(), 0, 0).getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
+            if (GameRegistry.findBlock(modId, str) != null || GameRegistry.findItem(modId, str) != null) {
+                return true;
+            } else {
+                str = itemStack.getItem().getClass().getName();
+                if (GameRegistry.findBlock(modId, str) != null || GameRegistry.findItem(modId, str) != null) {
+                    return true;
+                } else {
+                    if (itemStack.getItem().getClass().getName().equals("net.minecraft.item.ItemBlock")) {
+                        Block block = Block.blocksList[itemStack.itemID];
+                        str = block.getClass().getName();
+                        if (GameRegistry.findBlock(modId, str) != null) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (modId.equalsIgnoreCase("Vanilla")) {
+            if (itemStack.getItem().getClass().getName().equals("net.minecraft.item.ItemBlock")) {
+                Block block = Block.blocksList[itemStack.itemID];
+                return block.getClass().getName().startsWith("net.minecraft.");
+            } else return itemStack.getItem().getClass().getName().startsWith("net.minecraft.item");
+        }
+
+        return false;
+
     }
 }

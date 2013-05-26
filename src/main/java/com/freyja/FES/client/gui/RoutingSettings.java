@@ -38,7 +38,7 @@ public class RoutingSettings extends GuiScreen {
     public void initGui()
     {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 50, this.height / 2 - 10, 150, 20, RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName()));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 75, this.height / 2 - 10, 150, 20, RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName()));
     }
 
     @Override
@@ -60,9 +60,18 @@ public class RoutingSettings extends GuiScreen {
 
             if (index != RoutingSettingsRegistry.Instance().indexOf(entity.getSettings())) {
                 ((GuiButton) buttonList.get(buttonList.indexOf(par1GuiButton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName();
-                entity.setSettings(RoutingSettingsRegistry.Instance().getRoutingSetting(index));
-                PacketDispatcher.sendPacketToServer(new PacketUpdateSettings(index, x, y, z).makePacket());
             }
+        }
+    }
+
+    @Override
+    public void onGuiClosed()
+    {
+        super.onGuiClosed();
+
+        if (index != RoutingSettingsRegistry.Instance().indexOf(entity.getSettings())) {
+            entity.setSettings(RoutingSettingsRegistry.Instance().getRoutingSetting(index));
+            PacketDispatcher.sendPacketToServer(new PacketUpdateSettings(index, x, y, z).makePacket());
         }
     }
 }

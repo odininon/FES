@@ -7,7 +7,7 @@ import net.minecraft.block.Block
 import cpw.mods.fml.common.Mod.{PostInit, Init, PreInit}
 import cpw.mods.fml.common.event.{FMLPostInitializationEvent, FMLInitializationEvent, FMLPreInitializationEvent}
 import net.minecraft.block.material.Material
-import cpw.mods.fml.common.registry.{LanguageRegistry, GameRegistry}
+import cpw.mods.fml.common.registry.{GameData, LanguageRegistry, GameRegistry}
 import net.minecraftforge.common.Configuration
 import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
@@ -17,7 +17,8 @@ import com.freyja.FES.common.blocks.{BlockPlayerInventory, BlockLine, BlockInjec
 import com.freyja.FES.common.inventories.{TileEntityPlayerInventory, TileEntityLine, TileEntityInjector, TileEntityReceptacle}
 import com.freyja.FES.utils.{ModCompatibility, Utils}
 import com.freyja.FES.common.packets.PacketHandler
-import com.freyja.FES.RoutingSettings.{SmeltablesSettings, DefaultRoutingSetting, RoutingSettingsRegistry}
+import com.freyja.FES.RoutingSettings.{NoneSetting, SmeltablesSettings, DefaultRoutingSetting, RoutingSettingsRegistry}
+import cpw.mods.fml.client.FMLClientHandler
 
 /**
  * @author Freyja
@@ -136,6 +137,7 @@ object FES {
 
   @PostInit
   def postInit(event: FMLPostInitializationEvent) {
+    RoutingSettingsRegistry.Instance().registerRoutingSetting(new NoneSetting())
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting())
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new SmeltablesSettings())
     ModCompatibility.init()

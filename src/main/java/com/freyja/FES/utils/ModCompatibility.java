@@ -60,6 +60,8 @@ public class ModCompatibility {
 
         Collections.addAll(forbiddenMods, mods);
 
+        RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings("Vanilla"));
+
         for (ModContainer mod : Loader.instance().getModList()) {
             if (!forbiddenMods.contains(mod.getModId())) {
                 FES.logger().fine("Registering Routing Setting for " + mod.getName() + ".");

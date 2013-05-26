@@ -104,10 +104,10 @@ class TileEntityReceptacle extends RoutingEntity {
     getConnected match {
       case x: ISidedInventory => {
         for (
-          slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())
+          slot <- x.getAccessibleSlotsFromSide(orientation.getOpposite.ordinal())
           if x.getStackInSlot(slot) == null || x.getStackInSlot(slot).isItemEqual(itemStack)
         ) {
-          if (x.func_102007_a(slot, itemStack, orientation.getOpposite.ordinal())) {
+          if (x.canInsertItem(slot, itemStack, orientation.getOpposite.ordinal())) {
             merge(itemStack, slot)
             if (itemStack.stackSize <= 0) {
               return
@@ -131,7 +131,7 @@ class TileEntityReceptacle extends RoutingEntity {
   }
 
   def merge(itemStack: ItemStack, slot: Int) {
-    val stack = Option(getConnected.asInstanceOf[IInventory].getStackInSlot(slot)) getOrElse (new ItemStack(itemStack.getItem, 0))
+    val stack = Option(getConnected.asInstanceOf[IInventory].getStackInSlot(slot)) getOrElse (new ItemStack(itemStack.getItem, 0, itemStack.getItemDamage))
     val tempStack = stack.copy()
 
     if (itemStack.hasTagCompound) {
@@ -181,8 +181,8 @@ class TileEntityReceptacle extends RoutingEntity {
 
     getConnected match {
       case x: ISidedInventory => {
-        for (slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())) {
-          if (x.func_102007_a(slot, itemStack, orientation.getOpposite.ordinal())) {
+        for (slot <- x.getAccessibleSlotsFromSide(orientation.getOpposite.ordinal())) {
+          if (x.canInsertItem(slot, itemStack, orientation.getOpposite.ordinal())) {
             if (getConnected.asInstanceOf[IInventory].getStackInSlot(slot) == null || canMerge(getConnected.asInstanceOf[IInventory].getStackInSlot(slot), itemStack)) return true
           }
         }
