@@ -21,6 +21,9 @@ public abstract class BasePacket {
 
     static {
         ImmutableBiMap.Builder<Integer, Class<? extends BasePacket>> builder = ImmutableBiMap.builder();
+        builder.put(0, PacketPurgeNetwork.class);
+        builder.put(1, PacketUpdateSettings.class);
+
         idMap = builder.build();
     }
 

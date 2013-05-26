@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.item.ItemStack
 import com.freyja.FES.common.inventories.{TileEntityInjector, TileEntityReceptacle}
+import com.freyja.FES.RoutingSettings.{IRoutingSetting, RoutingSettingsRegistry}
 
 /**
  * @author Freyja
@@ -19,6 +20,8 @@ trait RoutingEntity extends TileEntity {
 
   protected var connectedInventory: TileEntity = null
   protected var pullItemStacks = true
+
+  protected var routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(0)
 
   def getNetwork = routingNetwork
 
@@ -155,4 +158,10 @@ trait RoutingEntity extends TileEntity {
     inventory.decrStackSize(slotNumber, itemStack.stackSize)
     inventory.onInventoryChanged()
   }
+
+  def setSettings(settings: IRoutingSetting) {
+    routingSettings = settings
+  }
+
+  def getSettings = routingSettings
 }

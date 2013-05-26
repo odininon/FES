@@ -7,6 +7,8 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
+import com.freyja.FES.common.packets.PacketPurgeNetwork
+import com.freyja.FES.common.Network.RoutingEntity
 
 /**
  * @author Freyja
@@ -45,13 +47,18 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
   override def hasTileEntity: Boolean = true
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
-    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
 
-    for (entity <- te.getNetwork.getAll) {
-      entity.getNetwork.remove(te)
+    if (!world.isRemote) {
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[RoutingEntity]
+
+      for (entity <- te.getNetwork.getAll) {
+        entity.getNetwork.purgeNetwork(entity)
+        PacketDispatcher.sendPacketToAllAround(x, y, z, 64, world.getWorldInfo.getDimension, new PacketPurgeNetwork(entity.xCoord, entity.yCoord, entity.zCoord).makePacket())
+      }
     }
 
     super.breakBlock(world, x, y, z, par5, par6)
   }
+
 }
 

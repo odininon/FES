@@ -13,9 +13,11 @@ import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.item.Item
-import com.freyja.FES.common.blocks.{BlockLine, BlockInjector, BlockReceptacle}
-import com.freyja.FES.common.inventories.{TileEntityLine, TileEntityInjector, TileEntityReceptacle}
+import com.freyja.FES.common.blocks.{BlockPlayerInventory, BlockLine, BlockInjector, BlockReceptacle}
+import com.freyja.FES.common.inventories.{TileEntityPlayerInventory, TileEntityLine, TileEntityInjector, TileEntityReceptacle}
 import com.freyja.FES.utils.{ModCompatibility, Utils}
+import com.freyja.FES.common.packets.PacketHandler
+import com.freyja.FES.RoutingSettings.{SmeltablesSettings, DefaultRoutingSetting, RoutingSettingsRegistry}
 
 /**
  * @author Freyja
@@ -25,7 +27,7 @@ import com.freyja.FES.utils.{ModCompatibility, Utils}
 @Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", useMetadata = true)
 @NetworkMod(channels = Array[String] {
   "FES"
-}, clientSideRequired = true, serverSideRequired = false)
+}, clientSideRequired = true, serverSideRequired = false, packetHandler = classOf[PacketHandler])
 object FES {
   private val _creativeTab: CreativeTabs = new CreativeTabs("FES")
   private val _logger: Logger = Logger.getLogger("FES")
@@ -47,6 +49,7 @@ object FES {
   var blockReceptacle: Block = null
   var blockInjector: Block = null
   var blockLine: Block = null
+  var blockPlayer: Block = null
 
   /**
    * Ids
@@ -54,6 +57,7 @@ object FES {
   var blockReceptacleId: Int = 0
   var blockInjectorId: Int = 0
   var blockLineId: Int = 0
+  var blockPlayerId: Int = 0
 
   def initConfigurations(event: FMLPreInitializationEvent): Configuration = {
     val config: Configuration = new Configuration(event.getSuggestedConfigurationFile)
@@ -63,6 +67,7 @@ object FES {
       blockReceptacleId = config.getBlock("Receptacle", 2000).getInt(2000)
       blockInjectorId = config.getBlock("Injector", 2001).getInt(2001)
       blockLineId = config.getBlock("Line", 2002).getInt(2002)
+      blockPlayerId = config.getBlock("Player", 2003).getInt(2003)
 
     } catch {
       case e: Exception => logger.warning("Failed to load configurations.")
@@ -96,6 +101,10 @@ object FES {
     blockLine = new BlockLine(blockLineId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:line")
     registerObject(blockLine, "Line")
     GameRegistry.registerTileEntity(classOf[TileEntityLine], "Line")
+
+    blockPlayer = new BlockPlayerInventory(blockPlayerId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:player")
+    registerObject(blockPlayer, "Player")
+    GameRegistry.registerTileEntity(classOf[TileEntityPlayerInventory], "Player")
   }
 
 
@@ -126,5 +135,7 @@ object FES {
   @PostInit
   def postInit(event: FMLPostInitializationEvent) {
     ModCompatibility.init()
+    RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting())
+    RoutingSettingsRegistry.Instance().registerRoutingSetting(new SmeltablesSettings())
   }
 }

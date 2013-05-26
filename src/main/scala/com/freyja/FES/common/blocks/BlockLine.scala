@@ -9,6 +9,8 @@ import net.minecraftforge.common.ForgeDirection
 import com.freyja.FES.client.renderers.RenderLine
 import com.freyja.FES.common.Network.RoutingEntity
 import com.freyja.FES.utils.Position
+import cpw.mods.fml.common.network.PacketDispatcher
+import com.freyja.FES.common.packets.PacketPurgeNetwork
 
 /**
  * @author Freyja
@@ -19,12 +21,14 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
   def createNewTileEntity(world: World): TileEntity = new TileEntityLine
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
-    val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLine]
+    if (!world.isRemote) {
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[RoutingEntity]
 
-    for (entity <- te.getNetwork.getAll) {
-      entity.getNetwork.remove(te)
+      for (entity <- te.getNetwork.getAll) {
+        entity.getNetwork.purgeNetwork(entity)
+        PacketDispatcher.sendPacketToAllAround(x, y, z, 64, world.getWorldInfo.getDimension, new PacketPurgeNetwork(entity.xCoord, entity.yCoord, entity.zCoord).makePacket())
+      }
     }
-
 
     super.breakBlock(world, x, y, z, par5, par6)
   }

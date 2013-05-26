@@ -5,6 +5,7 @@ import scala.collection.mutable.ListBuffer
 import net.minecraft.item.ItemStack
 import scala.util.Random
 import net.minecraft.inventory.IInventory
+import net.minecraft.tileentity.TileEntity
 
 
 /**
@@ -93,5 +94,12 @@ class RoutingNetwork {
     } else {
       false
     }
+  }
+
+  def purgeNetwork(te: TileEntity) {
+    injectors.clear()
+    receptacles.clear()
+    lines.clear()
+    this.add(te)
   }
 }

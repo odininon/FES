@@ -36,7 +36,6 @@ public class ItemRenderInjector implements IItemRenderer {
         switch (type) {
             case ENTITY:
                 renderInjector(0f, 0f, 0, 0.5f);
-                return;
         }
     }
 

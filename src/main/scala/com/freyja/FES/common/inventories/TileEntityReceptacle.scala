@@ -10,6 +10,7 @@ import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.network.INetworkManager
 import com.freyja.FES.utils.{ModCompatibility, Position}
 import scala.collection.mutable.ListBuffer
+import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry
 
 /**
  * @author Freyja
@@ -48,6 +49,7 @@ class TileEntityReceptacle extends RoutingEntity {
   def writeCustomNBT(tag: NBTTagCompound) {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("Initialized", initialized)
+    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -57,6 +59,7 @@ class TileEntityReceptacle extends RoutingEntity {
   def readCustomNBT(tag: NBTTagCompound) {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     initialized = tag.getBoolean("Initialized")
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
   }
 
   def updateConnections() {
@@ -94,7 +97,7 @@ class TileEntityReceptacle extends RoutingEntity {
   }
 
   def canAccept(itemStack: ItemStack): Boolean = {
-    hasRoom(itemStack)
+    hasRoom(itemStack) && routingSettings.isItemValid(itemStack)
   }
 
   def addItem(itemStack: ItemStack) {
