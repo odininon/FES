@@ -2,6 +2,8 @@ package com.freyja.FES.client.models;
 
 import com.freyja.FES.common.inventories.TileEntityReceptacle;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -12,6 +14,7 @@ import org.lwjgl.opengl.GL11;
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
+@SideOnly(Side.CLIENT)
 public class ModelReceptacle extends ModelBase {
     private IModelCustom modelReceptacle;
 

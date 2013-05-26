@@ -4,6 +4,8 @@ import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
 import com.freyja.FES.common.Network.RoutingEntity;
 import com.freyja.FES.common.packets.PacketUpdateSettings;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +14,8 @@ import net.minecraft.tileentity.TileEntity;
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
+
+@SideOnly(Side.CLIENT)
 public class RoutingSettings extends GuiScreen {
 
     private int index = 0;
@@ -34,7 +38,7 @@ public class RoutingSettings extends GuiScreen {
     public void initGui()
     {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 50, this.height / 2 - 10, 100, 20, RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName()));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 50, this.height / 2 - 10, 150, 20, RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName()));
     }
 
     @Override

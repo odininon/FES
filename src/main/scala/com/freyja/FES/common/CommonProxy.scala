@@ -17,4 +17,8 @@ class CommonProxy extends IGuiHandler {
 
 
   def registerTESRS() {}
+
+  def openLocalGui(guiID: Int, x: Int, y: Int, z: Int) {}
+
+  def getWorld: World = null
 }

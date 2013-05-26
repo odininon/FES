@@ -2,6 +2,8 @@ package com.freyja.FES.client.renderers;
 
 import com.freyja.FES.client.models.ModelInjector;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
@@ -10,6 +12,7 @@ import org.lwjgl.opengl.GL11;
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
+@SideOnly(Side.CLIENT)
 public class ItemRenderInjector implements IItemRenderer {
     private ModelInjector modelInjector;
 

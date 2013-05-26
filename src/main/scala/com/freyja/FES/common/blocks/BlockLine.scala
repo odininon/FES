@@ -11,6 +11,7 @@ import com.freyja.FES.common.Network.RoutingEntity
 import com.freyja.FES.utils.Position
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.packets.PacketPurgeNetwork
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 /**
  * @author Freyja
@@ -33,10 +34,13 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
     super.breakBlock(world, x, y, z, par5, par6)
   }
 
+  @SideOnly(Side.CLIENT)
   override def renderAsNormalBlock(): Boolean = false
 
+  @SideOnly(Side.CLIENT)
   override def isOpaqueCube: Boolean = false
 
+  @SideOnly(Side.CLIENT)
   override def getRenderType: Int = RenderLine.renderId
 
   def canConnectOnSide(world: IBlockAccess, direction: Int, x: Int, y: Int, z: Int): Boolean = {

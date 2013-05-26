@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity
 import com.freyja.FES.common.inventories.TileEntityPlayerInventory
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.client.renderer.texture.IconRegister
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 /**
  * @author Freyja
@@ -23,6 +24,7 @@ class BlockPlayerInventory(id: Int, material: Material) extends BlockContainer(i
     true
   }
 
+  @SideOnly(Side.CLIENT)
   override def registerIcons(par1IconRegister: IconRegister) {
     this.blockIcon = par1IconRegister.registerIcon("FES:player_side")
   }

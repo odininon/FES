@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.packets.PacketPurgeNetwork
 import com.freyja.FES.common.Network.RoutingEntity
+import com.freyja.FES.FES
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 /**
  * @author Freyja
@@ -21,27 +23,35 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
 
     if (!world.isRemote) {
-      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
-      te.rotate(te)
+      if (player.isSneaking) {
+        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
+        te.rotate(te)
 
-      world.notifyBlockChange(x + 1, y, z, this.blockId)
-      world.notifyBlockChange(x - 1, y, z, this.blockId)
-      world.notifyBlockChange(x, y + 1, z, this.blockId)
-      world.notifyBlockChange(x, y - 1, z, this.blockId)
-      world.notifyBlockChange(x, y, z + 1, this.blockId)
-      world.notifyBlockChange(x, y, z - 1, this.blockId)
+        world.notifyBlockChange(x + 1, y, z, this.blockId)
+        world.notifyBlockChange(x - 1, y, z, this.blockId)
+        world.notifyBlockChange(x, y + 1, z, this.blockId)
+        world.notifyBlockChange(x, y - 1, z, this.blockId)
+        world.notifyBlockChange(x, y, z + 1, this.blockId)
+        world.notifyBlockChange(x, y, z - 1, this.blockId)
 
-      PacketDispatcher.sendPacketToAllAround(x, y, z, 64, player.dimension, te.getDescriptionPacket)
+        PacketDispatcher.sendPacketToAllAround(x, y, z, 64, player.dimension, te.getDescriptionPacket)
+        player.swingItem()
+      }
+    } else {
+      if (!player.isSneaking) {
+        FES.proxy.openLocalGui(0, x, y, z)
+      }
     }
-
-    player.swingItem()
     true
   }
 
+  @SideOnly(Side.CLIENT)
   override def renderAsNormalBlock(): Boolean = true
 
+  @SideOnly(Side.CLIENT)
   override def isOpaqueCube: Boolean = false
 
+  @SideOnly(Side.CLIENT)
   override def getRenderType: Int = -1
 
   override def hasTileEntity: Boolean = true

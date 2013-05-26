@@ -3,6 +3,8 @@ package com.freyja.FES.client.renderers;
 import com.freyja.FES.common.blocks.BlockLine;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
@@ -11,6 +13,7 @@ import net.minecraft.world.IBlockAccess;
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
+@SideOnly(Side.CLIENT)
 public class RenderLine implements ISimpleBlockRenderingHandler {
 
     public static int renderId = RenderingRegistry.getNextAvailableRenderId();

@@ -122,7 +122,7 @@ trait RoutingEntity extends TileEntity {
               case false => 1
               case true => tempStack.stackSize
             }
-            val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal())
+            val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal()) && routingSettings.isItemValid(itemStack)
             if (canExtract && itemStack != null) {
               while (!getNetwork.injectItemStack(itemStack, this, slot, x) && itemStack.stackSize > 0) {
                 itemStack.stackSize -= 1
@@ -141,7 +141,7 @@ trait RoutingEntity extends TileEntity {
               case false => 1
               case true => tempStack.stackSize
             }
-            val canExtract = true
+            val canExtract = routingSettings.isItemValid(itemStack)
             if (canExtract && itemStack != null) {
               while (!getNetwork.injectItemStack(itemStack, this, slot, x) && itemStack.stackSize > 0) {
                 itemStack.stackSize -= 1

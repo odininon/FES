@@ -40,7 +40,9 @@ object FES {
   def config = _config
 
 
-  private val proxy = findProxy()
+  private val _proxy = findProxy()
+
+  def proxy = _proxy;
 
 
   /**
@@ -113,11 +115,11 @@ object FES {
 
     registry match {
       case registry: Block => {
-        GameRegistry.registerBlock(registry, registry.getUnlocalizedName)
+        GameRegistry.registerBlock(registry, registry.getUnlocalizedName.substring(registry.getUnlocalizedName.lastIndexOf(".") + 1))
         LanguageRegistry.addName(registry, name)
       }
       case registry: Item => {
-        GameRegistry.registerItem(registry, registry.getUnlocalizedName)
+        GameRegistry.registerItem(registry, registry.getUnlocalizedName.substring(registry.getUnlocalizedName.lastIndexOf(".") + 1))
         LanguageRegistry.addName(registry, name)
       }
       case _ => logger.info("Tried to register something unknown.")
@@ -134,8 +136,9 @@ object FES {
 
   @PostInit
   def postInit(event: FMLPostInitializationEvent) {
-    ModCompatibility.init()
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting())
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new SmeltablesSettings())
+    ModCompatibility.init()
+    ModCompatibility.registerSettings()
   }
 }

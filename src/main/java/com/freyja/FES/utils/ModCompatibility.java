@@ -1,7 +1,13 @@
 package com.freyja.FES.utils;
 
 import com.freyja.FES.FES;
+import com.freyja.FES.RoutingSettings.ModSortSettings;
+import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Freyja
@@ -43,6 +49,22 @@ public class ModCompatibility {
             }
         } else {
             FES.logger().info("Not loading TConstruct compatibility.");
+        }
+    }
+
+    public static void registerSettings()
+    {
+        String[] mods = new String[]{"mcp", "FML", "Forge"};
+
+        ArrayList<String> forbiddenMods = new ArrayList<String>();
+
+        Collections.addAll(forbiddenMods, mods);
+
+        for (ModContainer mod : Loader.instance().getModList()) {
+            if (!forbiddenMods.contains(mod.getModId())) {
+                FES.logger().fine("Registering Routing Setting for " + mod.getName() + ".");
+                RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings(mod.getModId()));
+            }
         }
     }
 

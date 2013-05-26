@@ -7,6 +7,7 @@ import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.INetworkManager
 import com.freyja.FES.utils.Position
+import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry
 
 /**
  * @author Freyja
@@ -45,6 +46,7 @@ class TileEntityInjector extends RoutingEntity {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("PullItemStacks", pullItemStacks)
     tag.setBoolean("Initialized", initialized)
+    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -55,6 +57,7 @@ class TileEntityInjector extends RoutingEntity {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     pullItemStacks = tag.getBoolean("PullItemStacks")
     initialized = tag.getBoolean("Initialized")
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
   }
 
   def updateConnections() {

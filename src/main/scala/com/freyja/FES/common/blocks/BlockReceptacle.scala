@@ -11,6 +11,8 @@ import com.freyja.FES.common.Network.RoutingEntity
 import com.freyja.FES.common.packets.PacketPurgeNetwork
 import cpw.mods.fml.client.FMLClientHandler
 import com.freyja.FES.client.gui.RoutingSettings
+import com.freyja.FES.FES
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 
 /**
  * @author Freyja
@@ -39,17 +41,19 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
       }
     } else {
       if (!player.isSneaking) {
-        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityReceptacle]
-        FMLClientHandler.instance().getClient.displayGuiScreen(new RoutingSettings(te))
+        FES.proxy.openLocalGui(0, x, y, z)
       }
     }
     true
   }
 
+  @SideOnly(Side.CLIENT)
   override def renderAsNormalBlock(): Boolean = true
 
+  @SideOnly(Side.CLIENT)
   override def isOpaqueCube: Boolean = false
 
+  @SideOnly(Side.CLIENT)
   override def getRenderType: Int = -1
 
   override def hasTileEntity: Boolean = true
