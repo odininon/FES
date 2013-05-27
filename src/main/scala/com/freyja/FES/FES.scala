@@ -136,8 +136,6 @@ object FES {
 
   @PostInit
   def postInit(event: FMLPostInitializationEvent) {
-    ModCompatibility.buildModObjectTable()
-
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new NoneSetting())
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting())
     RoutingSettingsRegistry.Instance().registerRoutingSetting(new SmeltablesSettings())

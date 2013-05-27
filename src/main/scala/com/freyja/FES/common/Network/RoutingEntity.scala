@@ -37,6 +37,7 @@ trait RoutingEntity extends TileEntity {
   }
 
   def initRotate(tileEntity: TileEntity) {
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(1)
     if (tileEntity.worldObj != null && !tileEntity.worldObj.isRemote) {
 
       val otherTE = ((for (i <- -1 to 1) yield tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord + i, tileEntity.yCoord, tileEntity.zCoord)).toList :::
@@ -114,7 +115,7 @@ trait RoutingEntity extends TileEntity {
 
     inventory match {
       case x: ISidedInventory => {
-        for (slot <- x.getAccessibleSlotsFromSide(relativeDirections(inventory, this).ordinal())) {
+        for (slot <- x.getSizeInventorySide(relativeDirections(inventory, this).ordinal())) {
           val tempStack = x.getStackInSlot(slot)
           if (tempStack != null) {
             val itemStack = tempStack.copy
@@ -122,7 +123,7 @@ trait RoutingEntity extends TileEntity {
               case false => 1
               case true => tempStack.stackSize
             }
-            val canExtract = x.canExtractItem(slot, itemStack, orientation.getOpposite.ordinal()) && routingSettings.isItemValid(itemStack)
+            val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal()) && routingSettings.isItemValid(itemStack)
             if (canExtract && itemStack != null) {
               while (!getNetwork.injectItemStack(itemStack, this, slot, x) && itemStack.stackSize > 0) {
                 itemStack.stackSize -= 1

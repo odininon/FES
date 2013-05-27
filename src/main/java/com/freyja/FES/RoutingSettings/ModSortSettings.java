@@ -51,19 +51,8 @@ public class ModSortSettings implements IRoutingSetting {
         }
 
         //Checks Items
-        str = itemStack.getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
-        if (FreyjaGameData.findItem(modId, str) != null) {
+        if (FreyjaGameData.partofMod(modId, itemStack.itemID)) {
             return true;
-        } else {
-            str = new ItemStack(itemStack.copy().getItem(), 0, 0).getItemName().substring(itemStack.getItemName().lastIndexOf(".") + 1);
-            if (FreyjaGameData.findItem(modId, str) != null) {
-                return true;
-            } else {
-                str = itemStack.getItem().getClass().getName();
-                if (FreyjaGameData.findItem(modId, str) != null) {
-                    return true;
-                }
-            }
         }
 
         //Checks Vanilla

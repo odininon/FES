@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.md-5</groupId>
         <artifactId>ForgeMod</artifactId>
-        <version>1.5.2-7.8.0-SNAPSHOT</version>
+        <version>1.5.1-7.7.2</version>
     </parent>
 
     <scm>
@@ -24,11 +24,22 @@
         <url>https://github.com/odininon/fes/issues</url>
     </issueManagement>
 
+    <properties>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <scala.version>2.10.1</scala.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.aesireanempire.freyja</groupId>
             <artifactId>Freyja-Core</artifactId>
             <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
         </dependency>
     </dependencies>
 
@@ -75,4 +86,30 @@
             </plugin>
         </plugins>
     </build>
+
+
+    <profiles>
+        <profile>
+            <id>static_build_number</id>
+            <activation>
+                <property>
+                    <name>!env.BUILD_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <buildVersion>${project.version}</buildVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>dynamic_build_number</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <buildVersion>${project.version}-${env.BUILD_NUMBER}</buildVersion>
+            </properties>
+        </profile>
+    </profiles>
 </project>

@@ -1,9 +1,14 @@
 package com.freyja.FES.client;
 
 import com.freyja.FES.client.gui.RoutingSettings;
+import com.freyja.FES.client.renderers.RenderInjector;
 import com.freyja.FES.client.renderers.RenderLine;
+import com.freyja.FES.client.renderers.RenderReceptacle;
 import com.freyja.FES.common.CommonProxy;
+import com.freyja.FES.common.inventories.TileEntityInjector;
+import com.freyja.FES.common.inventories.TileEntityReceptacle;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -23,8 +28,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerTESRS()
     {
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInjector.class, new RenderInjector());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReceptacle.class, new RenderReceptacle());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInjector.class, new RenderInjector());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReceptacle.class, new RenderReceptacle());
         RenderingRegistry.registerBlockHandler(new RenderLine());
     }
 

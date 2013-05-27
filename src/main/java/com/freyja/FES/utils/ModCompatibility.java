@@ -3,7 +3,6 @@ package com.freyja.FES.utils;
 import com.freyja.FES.FES;
 import com.freyja.FES.RoutingSettings.ModSortSettings;
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
-import com.freyja.core.utils.FreyjaGameData;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 
@@ -70,10 +69,4 @@ public class ModCompatibility {
             }
         }
     }
-
-    public static void buildModObjectTable()
-    {
-        FreyjaGameData.buildModObjectTable();
-    }
-
 }
