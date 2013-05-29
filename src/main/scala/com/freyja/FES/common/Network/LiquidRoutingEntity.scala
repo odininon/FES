@@ -83,7 +83,7 @@ class LiquidRoutingEntity extends RoutingEntity {
 
   def removeLiquid(stack: LiquidStack, amountFilled: Int) {
     connectedInventory match {
-      case te: ITankContainer => te.drain(orientation.getOpposite, stack.amount, true)
+      case te: ITankContainer => te.drain(orientation.getOpposite, amountFilled, true)
     }
   }
 

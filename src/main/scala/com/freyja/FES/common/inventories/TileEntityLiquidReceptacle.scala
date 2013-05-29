@@ -1,6 +1,6 @@
 package com.freyja.FES.common.inventories
 
-import com.freyja.FES.common.Network.{ItemRoutingEntity, LiquidRoutingEntity}
+import com.freyja.FES.common.Network.LiquidRoutingEntity
 import scala.collection.mutable.ListBuffer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
@@ -98,9 +98,7 @@ class TileEntityLiquidReceptacle extends LiquidRoutingEntity {
   def addLiquid(liquid: LiquidStack): Int = {
     connectedInventory match {
       case te: ITankContainer => {
-        val tank = te.getTank(orientation.getOpposite, liquid)
-        if (tank == null) return 0
-        return tank.fill(liquid, true)
+        return te.fill(orientation.getOpposite, liquid, true)
       }
     }
     0
@@ -110,9 +108,7 @@ class TileEntityLiquidReceptacle extends LiquidRoutingEntity {
     if(connectedInventory == null) return false
     connectedInventory match {
       case te: ITankContainer => {
-        val tank = te.getTank(orientation.getOpposite, stack)
-        if (tank == null) return false
-        if (tank.fill(stack, false) > 0) return true
+        if (te.fill(orientation.getOpposite, stack, false) > 0) return true
       }
     }
     false

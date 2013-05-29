@@ -46,7 +46,7 @@ class LiquidRoutingNetwork extends RoutingNetwork {
     this.add(te)
   }
 
-  override def count = injectors.size
+  override def count = injectors.size + receptacles.size + lines.size
 
   override def getInjectors = injectors
 
