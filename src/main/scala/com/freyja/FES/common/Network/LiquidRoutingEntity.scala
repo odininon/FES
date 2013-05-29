@@ -71,7 +71,7 @@ class LiquidRoutingEntity extends RoutingEntity {
     inventory match {
       case te: ITankContainer => {
         val tank = te.getTank(orientation.getOpposite, null)
-        if (tank != null) maxCapacity = tank.getCapacity
+        if (tank != null) maxCapacity = 1000
         liquidStack = te.drain(orientation.getOpposite, maxCapacity, false)
       }
     }
