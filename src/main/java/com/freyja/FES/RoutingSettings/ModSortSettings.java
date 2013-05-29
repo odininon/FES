@@ -23,6 +23,11 @@ public class ModSortSettings implements IRoutingSetting {
         return modId + " items";
     }
 
+    public String getModId()
+    {
+        return modId;
+    }
+
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {

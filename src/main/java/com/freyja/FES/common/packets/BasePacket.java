@@ -23,6 +23,7 @@ public abstract class BasePacket {
         ImmutableBiMap.Builder<Integer, Class<? extends BasePacket>> builder = ImmutableBiMap.builder();
         builder.put(0, PacketPurgeNetwork.class);
         builder.put(1, PacketUpdateSettings.class);
+        builder.put(2, ModPacketUpdateSettings.class);
 
         idMap = builder.build();
     }

@@ -3,8 +3,8 @@ package com.freyja.FES.utils;
 import com.freyja.FES.FES;
 import com.freyja.FES.RoutingSettings.ModSortSettings;
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
+import com.freyja.core.utils.FreyjaGameData;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,19 +54,23 @@ public class ModCompatibility {
 
     public static void registerSettings()
     {
-        String[] mods = new String[]{"mcp", "FML", "Forge"};
+        ArrayList<String> mods = new ArrayList<String>();
 
-        ArrayList<String> forbiddenMods = new ArrayList<String>();
+        for (Object modID : FreyjaGameData.getMap().values()) {
+            String mod = (String) modID;
+            if (!mods.contains(mod)) {
+                mods.add(mod);
+            }
+        }
 
-        Collections.addAll(forbiddenMods, mods);
+        Collections.sort(mods);
+
 
         RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings("Vanilla"));
 
-        for (ModContainer mod : Loader.instance().getModList()) {
-            if (!forbiddenMods.contains(mod.getModId()) && !mod.isImmutable()) {
-                FES.logger().fine("Registering Routing Setting for " + mod.getName() + ".");
-                RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings(mod.getModId()));
-            }
+        for (String mod : mods) {
+            FES.logger().fine("Registering Routing Setting for " + mod + ".");
+            RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings(mod));
         }
     }
 }

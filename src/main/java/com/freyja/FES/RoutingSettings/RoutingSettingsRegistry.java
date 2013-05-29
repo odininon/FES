@@ -37,4 +37,14 @@ public class RoutingSettingsRegistry {
     {
         return routingSettings.size();
     }
+
+    public IRoutingSetting getModSetting(String modId)
+    {
+        for (IRoutingSetting setting : routingSettings) {
+            if (setting instanceof ModSortSettings && ((ModSortSettings) setting).getModId().equalsIgnoreCase(modId)) {
+                return setting;
+            }
+        }
+        return null;
+    }
 }
