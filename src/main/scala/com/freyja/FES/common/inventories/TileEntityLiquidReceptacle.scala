@@ -1,29 +1,32 @@
 package com.freyja.FES.common.inventories
 
-import com.freyja.FES.common.Network.RoutingEntity
-import net.minecraftforge.common.ForgeDirection
-import net.minecraft.inventory.IInventory
-import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
+import com.freyja.FES.common.Network.{ItemRoutingEntity, LiquidRoutingEntity}
+import scala.collection.mutable.ListBuffer
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.INetworkManager
-import com.freyja.FES.utils.Position
+import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry
+import net.minecraft.network.INetworkManager
+import net.minecraftforge.common.ForgeDirection
+import com.freyja.FES.utils.Position
+import net.minecraftforge.liquids.{LiquidStack, ITankContainer}
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-class TileEntityInjector extends RoutingEntity {
+class TileEntityLiquidReceptacle extends LiquidRoutingEntity {
+  private var otherInventories: ListBuffer[TileEntity] = ListBuffer.empty[TileEntity]
+
   add(this)
 
   override def updateEntity() {
     if (!initialized) initRotate(this)
     if (worldObj.getTotalWorldTime % 10L == 0L) {
       updateConnections()
-      injectItems(getConnected)
+      inject()
     }
   }
-
 
   override def writeToNBT(par1NBTTagCompound: NBTTagCompound) {
     super.writeToNBT(par1NBTTagCompound)
@@ -44,7 +47,6 @@ class TileEntityInjector extends RoutingEntity {
 
   def writeCustomNBT(tag: NBTTagCompound) {
     tag.setInteger("Orientation", orientation.ordinal())
-    tag.setBoolean("PullItemStacks", pullItemStacks)
     tag.setBoolean("Initialized", initialized)
     tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
   }
@@ -55,7 +57,6 @@ class TileEntityInjector extends RoutingEntity {
 
   def readCustomNBT(tag: NBTTagCompound) {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
-    pullItemStacks = tag.getBoolean("PullItemStacks")
     initialized = tag.getBoolean("Initialized")
     routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
   }
@@ -68,7 +69,7 @@ class TileEntityInjector extends RoutingEntity {
 
     te match {
       case null => if (this.connectedInventory != null) this.connectedInventory = null
-      case x: IInventory => if (this.connectedInventory != te) this.connectedInventory = te
+      case te: ITankContainer => if (this.connectedInventory != te) this.connectedInventory = te
       case _ => None
     }
 
@@ -80,12 +81,46 @@ class TileEntityInjector extends RoutingEntity {
 
       te match {
         case null => None
-        case te: RoutingEntity => if (te.isInstanceOf[TileEntityLine] && !this.getNetwork.equals(te.getNetwork)) {
+        case te: ITankContainer => if (!otherInventories.contains(te) && !te.equals(connectedInventory)) otherInventories += te
+        case te: LiquidRoutingEntity => if (te.isInstanceOf[TileEntityLiquidLine] && !this.getNetwork.equals(te.getNetwork)) {
           this.getNetwork.mergeNetworks(te.getNetwork)
           te.getNetwork.mergeNetworks(this.getNetwork)
         }
         case _ => None
       }
+    }
+  }
+
+  def clearOthers() {
+    otherInventories.clear()
+  }
+
+  def addLiquid(liquid: LiquidStack): Int = {
+    connectedInventory match {
+      case te: ITankContainer => {
+        val tank = te.getTank(orientation.getOpposite, liquid)
+        if (tank == null) return 0
+        return tank.fill(liquid, true)
+      }
+    }
+    0
+  }
+
+  def canAccept(stack: LiquidStack): Boolean = {
+    if(connectedInventory == null) return false
+    connectedInventory match {
+      case te: ITankContainer => {
+        val tank = te.getTank(orientation.getOpposite, stack)
+        if (tank == null) return false
+        if (tank.fill(stack, false) > 0) return true
+      }
+    }
+    false
+  }
+
+  def inject() {
+    for (inventory <- otherInventories) {
+      injectItems(inventory)
     }
   }
 }

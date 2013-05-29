@@ -1,6 +1,6 @@
 package com.freyja.FES.client.models;
 
-import com.freyja.FES.common.inventories.TileEntityInjector;
+import com.freyja.FES.common.Network.RoutingEntity;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,7 +28,7 @@ public class ModelInjector extends ModelBase {
         modelInjector.renderAll();
     }
 
-    public void render(TileEntityInjector te, double x, double y, double z)
+    public void render(RoutingEntity te, double x, double y, double z)
     {
         GL11.glPushMatrix();
 

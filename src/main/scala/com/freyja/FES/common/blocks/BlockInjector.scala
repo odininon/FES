@@ -1,6 +1,6 @@
 package com.freyja.FES.common.blocks
 
-import com.freyja.FES.common.inventories.TileEntityInjector
+import com.freyja.FES.common.inventories.TileEntityItemInjector
 import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
@@ -8,7 +8,7 @@ import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.packets.PacketPurgeNetwork
-import com.freyja.FES.common.Network.RoutingEntity
+import com.freyja.FES.common.Network.ItemRoutingEntity
 import com.freyja.FES.FES
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
@@ -18,13 +18,13 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
  */
 class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blockId, material) {
 
-  override def createNewTileEntity(world: World): TileEntity = new TileEntityInjector
+  override def createNewTileEntity(world: World): TileEntity = new TileEntityItemInjector
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
 
     if (!world.isRemote) {
       if (player.isSneaking) {
-        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityInjector]
+        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityItemInjector]
         te.rotate(te)
 
         world.notifyBlockChange(x + 1, y, z, this.blockId)
@@ -59,7 +59,7 @@ class BlockInjector(blockId: Int, material: Material) extends BlockContainer(blo
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
 
     if (!world.isRemote) {
-      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[RoutingEntity]
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[ItemRoutingEntity]
 
       for (entity <- te.getNetwork.getAll) {
         entity.getNetwork.purgeNetwork(entity)

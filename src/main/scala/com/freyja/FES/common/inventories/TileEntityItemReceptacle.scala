@@ -1,7 +1,7 @@
 package com.freyja.FES.common.inventories
 
 import net.minecraft.tileentity.TileEntity
-import com.freyja.FES.common.Network.RoutingEntity
+import com.freyja.FES.common.Network.ItemRoutingEntity
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.inventory.{ISidedInventory, IInventory}
 import net.minecraft.item.ItemStack
@@ -16,7 +16,7 @@ import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-class TileEntityReceptacle extends RoutingEntity {
+class TileEntityItemReceptacle extends ItemRoutingEntity {
   private var otherInventories: ListBuffer[TileEntity] = ListBuffer.empty[TileEntity]
 
   add(this)
@@ -83,7 +83,7 @@ class TileEntityReceptacle extends RoutingEntity {
       te match {
         case null => None
         case te: IInventory => if (!otherInventories.contains(te) && !te.equals(connectedInventory)) otherInventories += te
-        case te: RoutingEntity => if (te.isInstanceOf[TileEntityLine] && !this.getNetwork.equals(te.getNetwork)) {
+        case te: ItemRoutingEntity => if (te.isInstanceOf[TileEntityItemLine] && !this.getNetwork.equals(te.getNetwork)) {
           this.getNetwork.mergeNetworks(te.getNetwork)
           te.getNetwork.mergeNetworks(this.getNetwork)
         }

@@ -1,13 +1,13 @@
 package com.freyja.FES.common.blocks
 
-import com.freyja.FES.common.inventories.{TileEntityItemLine, TileEntityItemReceptacle, TileEntityItemInjector}
+import com.freyja.FES.common.inventories._
 import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.ForgeDirection
-import com.freyja.FES.client.renderers.RenderLine
-import com.freyja.FES.common.Network.ItemRoutingEntity
+import com.freyja.FES.client.renderers.{RenderLineLiquid, RenderLine}
+import com.freyja.FES.common.Network.{LiquidRoutingEntity, ItemRoutingEntity}
 import com.freyja.FES.utils.Position
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.packets.PacketPurgeNetwork
@@ -17,13 +17,13 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId, material) {
+class BlockLineLiquid(blockId: Int, material: Material) extends BlockContainer(blockId, material) {
 
-  def createNewTileEntity(world: World): TileEntity = new TileEntityItemLine
+  def createNewTileEntity(world: World): TileEntity = new TileEntityLiquidLine
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
     if (!world.isRemote) {
-      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityItemLine]
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLiquidLine]
 
       for (entity <- te.getNetwork.getAll) {
         entity.getNetwork.purgeNetwork(entity)
@@ -41,7 +41,7 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
   override def isOpaqueCube: Boolean = false
 
   @SideOnly(Side.CLIENT)
-  override def getRenderType: Int = RenderLine.renderId
+  override def getRenderType: Int = RenderLineLiquid.renderId
 
   def canConnectOnSide(world: IBlockAccess, direction: Int, x: Int, y: Int, z: Int): Boolean = {
     val position = new Position(x, y, z, ForgeDirection.getOrientation(direction))
@@ -50,9 +50,9 @@ class BlockLine(blockId: Int, material: Material) extends BlockContainer(blockId
     val tileEntity = world.getBlockTileEntity(position.x.toInt, position.y.toInt, position.z.toInt)
 
     tileEntity match {
-      case x: TileEntityItemInjector => !x.getOrientation.eq(ForgeDirection.getOrientation(direction).getOpposite)
-      case x: TileEntityItemReceptacle => !x.getOrientation.eq(ForgeDirection.getOrientation(direction).getOpposite)
-      case x: ItemRoutingEntity => true
+      case x: TileEntityLiquidInjector => !x.getOrientation.eq(ForgeDirection.getOrientation(direction).getOpposite)
+      case x: TileEntityLiquidReceptacle => !x.getOrientation.eq(ForgeDirection.getOrientation(direction).getOpposite)
+      case x: LiquidRoutingEntity => true
       case _ => false
     }
   }

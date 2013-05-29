@@ -3,10 +3,13 @@ package com.freyja.FES.client;
 import com.freyja.FES.client.gui.RoutingSettings;
 import com.freyja.FES.client.renderers.RenderInjector;
 import com.freyja.FES.client.renderers.RenderLine;
+import com.freyja.FES.client.renderers.RenderLineLiquid;
 import com.freyja.FES.client.renderers.RenderReceptacle;
 import com.freyja.FES.common.CommonProxy;
-import com.freyja.FES.common.inventories.TileEntityInjector;
-import com.freyja.FES.common.inventories.TileEntityReceptacle;
+import com.freyja.FES.common.inventories.TileEntityItemInjector;
+import com.freyja.FES.common.inventories.TileEntityItemReceptacle;
+import com.freyja.FES.common.inventories.TileEntityLiquidInjector;
+import com.freyja.FES.common.inventories.TileEntityLiquidReceptacle;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -28,9 +31,13 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerTESRS()
     {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityInjector.class, new RenderInjector());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReceptacle.class, new RenderReceptacle());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityItemInjector.class, new RenderInjector());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityItemReceptacle.class, new RenderReceptacle());
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquidInjector.class, new RenderInjector());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquidReceptacle.class, new RenderReceptacle());
         RenderingRegistry.registerBlockHandler(new RenderLine());
+        RenderingRegistry.registerBlockHandler(new RenderLineLiquid());
     }
 
     @Override

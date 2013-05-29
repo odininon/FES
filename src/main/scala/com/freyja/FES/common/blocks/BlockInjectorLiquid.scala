@@ -1,14 +1,14 @@
 package com.freyja.FES.common.blocks
 
-import com.freyja.FES.common.inventories.TileEntityItemReceptacle
+import com.freyja.FES.common.inventories.{TileEntityLiquidInjector, TileEntityItemInjector}
 import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
-import com.freyja.FES.common.Network.{ItemRoutingEntity, RoutingEntity}
 import com.freyja.FES.common.packets.PacketPurgeNetwork
+import com.freyja.FES.common.Network.{LiquidRoutingEntity, ItemRoutingEntity}
 import com.freyja.FES.FES
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
@@ -16,15 +16,15 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(blockId, material) {
+class BlockInjectorLiquid(blockId: Int, material: Material) extends BlockContainer(blockId, material) {
 
-  def createNewTileEntity(world: World): TileEntity = new TileEntityItemReceptacle
+  override def createNewTileEntity(world: World): TileEntity = new TileEntityLiquidInjector
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, par6: Int, par7: Float, par8: Float, par9: Float): Boolean = {
 
     if (!world.isRemote) {
       if (player.isSneaking) {
-        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityItemReceptacle]
+        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLiquidInjector]
         te.rotate(te)
 
         world.notifyBlockChange(x + 1, y, z, this.blockId)
@@ -39,7 +39,10 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
       }
     } else {
       if (!player.isSneaking) {
-        FES.proxy.openLocalGui(0, x, y, z)
+        //FES.proxy.openLocalGui(0, x, y, z)
+        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLiquidInjector]
+        player.addChatMessage("Count: " + te.getNetwork.count)
+        player.addChatMessage("Connected: " + te.getConnected)
       }
     }
     true
@@ -57,8 +60,9 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
   override def hasTileEntity: Boolean = true
 
   override def breakBlock(world: World, x: Int, y: Int, z: Int, par5: Int, par6: Int) {
+
     if (!world.isRemote) {
-      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[ItemRoutingEntity]
+      val te = world.getBlockTileEntity(x, y, z).asInstanceOf[LiquidRoutingEntity]
 
       for (entity <- te.getNetwork.getAll) {
         entity.getNetwork.purgeNetwork(entity)
@@ -68,5 +72,6 @@ class BlockReceptacle(blockId: Int, material: Material) extends BlockContainer(b
 
     super.breakBlock(world, x, y, z, par5, par6)
   }
+
 }
 

@@ -1,12 +1,12 @@
 package com.freyja.FES.common.inventories
 
-import com.freyja.FES.common.Network.RoutingEntity
+import com.freyja.FES.common.Network.ItemRoutingEntity
 
 /**
  * @author Freyja
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
-class TileEntityLine extends RoutingEntity {
+class TileEntityItemLine extends ItemRoutingEntity {
   add(this)
 
   override def updateEntity() {
@@ -19,7 +19,7 @@ class TileEntityLine extends RoutingEntity {
     val otherTE = ((for (i <- -1 to 1) yield worldObj.getBlockTileEntity(xCoord + i, yCoord, zCoord)).toList :::
       (for (j <- -1 to 1) yield worldObj.getBlockTileEntity(xCoord, yCoord + j, zCoord)).toList :::
       (for (k <- -1 to 1) yield worldObj.getBlockTileEntity(xCoord, yCoord, zCoord + k)).toList).flatMap(x => x match {
-      case x: TileEntityLine => if (x != this) Some(x) else None
+      case x: TileEntityItemLine => if (x != this) Some(x) else None
       case _ => None
     })
 

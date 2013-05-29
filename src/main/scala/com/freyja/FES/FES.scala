@@ -12,8 +12,8 @@ import java.util.logging.Logger
 import com.freyja.FES.common.CommonProxy
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.item.Item
-import com.freyja.FES.common.blocks.{BlockPlayerInventory, BlockLine, BlockInjector, BlockReceptacle}
-import com.freyja.FES.common.inventories.{TileEntityPlayerInventory, TileEntityLine, TileEntityInjector, TileEntityReceptacle}
+import com.freyja.FES.common.blocks._
+import com.freyja.FES.common.inventories._
 import com.freyja.FES.utils.{ModCompatibility, Utils}
 import com.freyja.FES.common.packets.PacketHandler
 import com.freyja.FES.RoutingSettings.{NoneSetting, SmeltablesSettings, DefaultRoutingSetting, RoutingSettingsRegistry}
@@ -42,7 +42,7 @@ object FES {
 
   private val _proxy = findProxy()
 
-  def proxy = _proxy;
+  def proxy = _proxy
 
 
   /**
@@ -52,6 +52,9 @@ object FES {
   var blockInjector: Block = null
   var blockLine: Block = null
   var blockPlayer: Block = null
+  var blockLiquidInjector: Block = null
+  var blockLiquidReceptacle: Block = null
+  var blockLiquidLine: Block = null
 
   /**
    * Ids
@@ -60,6 +63,9 @@ object FES {
   var blockInjectorId: Int = 0
   var blockLineId: Int = 0
   var blockPlayerId: Int = 0
+  var blockLiquidInjectorId: Int = 0
+  var blockLiquidReceptacleId: Int = 0
+  var blockLiquidLineId: Int = 0
 
   def initConfigurations(event: FMLPreInitializationEvent): Configuration = {
     val config: Configuration = new Configuration(event.getSuggestedConfigurationFile)
@@ -70,6 +76,10 @@ object FES {
       blockInjectorId = config.getBlock("Injector", 2001).getInt(2001)
       blockLineId = config.getBlock("Line", 2002).getInt(2002)
       blockPlayerId = config.getBlock("Player", 2003).getInt(2003)
+
+      blockLiquidInjectorId = config.getBlock("LiquidInjector", 2004).getInt(2004)
+      blockLiquidReceptacleId = config.getBlock("LiquidReceptacle", 2005).getInt(2005)
+      blockLiquidLineId = config.getBlock("LiquidLine", 2006).getInt(2006)
 
     } catch {
       case e: Exception => logger.warning("Failed to load configurations.")
@@ -94,19 +104,31 @@ object FES {
 
     blockReceptacle = new BlockReceptacle(blockReceptacleId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:receptacle")
     registerObject(blockReceptacle, "Receptacle")
-    GameRegistry.registerTileEntity(classOf[TileEntityReceptacle], "Receptacle")
+    GameRegistry.registerTileEntity(classOf[TileEntityItemReceptacle], "Receptacle")
 
     blockInjector = new BlockInjector(blockInjectorId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:injector")
     registerObject(blockInjector, "Injector")
-    GameRegistry.registerTileEntity(classOf[TileEntityInjector], "Injector")
+    GameRegistry.registerTileEntity(classOf[TileEntityItemInjector], "Injector")
 
     blockLine = new BlockLine(blockLineId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:line")
     registerObject(blockLine, "Line")
-    GameRegistry.registerTileEntity(classOf[TileEntityLine], "Line")
+    GameRegistry.registerTileEntity(classOf[TileEntityItemLine], "Line")
 
     blockPlayer = new BlockPlayerInventory(blockPlayerId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:player")
     registerObject(blockPlayer, "Player")
     GameRegistry.registerTileEntity(classOf[TileEntityPlayerInventory], "Player")
+
+    blockLiquidInjector = new BlockInjectorLiquid(blockLiquidInjectorId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:liquidinejctor")
+    registerObject(blockLiquidInjector, "Liquid Injector")
+    GameRegistry.registerTileEntity(classOf[TileEntityLiquidInjector], "LiquidInjector")
+
+    blockLiquidReceptacle = new BlockReceptacleLiquid(blockLiquidReceptacleId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:liquidreceptacle")
+    registerObject(blockLiquidReceptacle, "Liquid Receptacle")
+    GameRegistry.registerTileEntity(classOf[TileEntityLiquidReceptacle], "LiquidReceptacle")
+
+    blockLiquidLine = new BlockLineLiquid(blockLiquidLineId, Material.circuits).setCreativeTab(creativeTab).setUnlocalizedName("FES:liquidline")
+    registerObject(blockLiquidLine, "Liquid Line")
+    GameRegistry.registerTileEntity(classOf[TileEntityLiquidLine], "LiquidLine")
   }
 
 

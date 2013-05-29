@@ -1,7 +1,7 @@
 package com.freyja.FES.client.renderers;
 
 import com.freyja.FES.client.models.ModelInjector;
-import com.freyja.FES.common.inventories.TileEntityInjector;
+import com.freyja.FES.common.Network.RoutingEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -18,6 +18,6 @@ public class RenderInjector extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f)
     {
-        modelInjector.render((TileEntityInjector) tileentity, x, y, z);
+        modelInjector.render((RoutingEntity) tileentity, x, y, z);
     }
 }

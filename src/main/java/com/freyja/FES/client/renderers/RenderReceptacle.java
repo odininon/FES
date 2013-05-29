@@ -1,7 +1,7 @@
 package com.freyja.FES.client.renderers;
 
 import com.freyja.FES.client.models.ModelReceptacle;
-import com.freyja.FES.common.inventories.TileEntityReceptacle;
+import com.freyja.FES.common.Network.RoutingEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -18,6 +18,6 @@ public class RenderReceptacle extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f)
     {
-        modelReceptacle.render((TileEntityReceptacle) tileentity, x, y, z);
+        modelReceptacle.render((RoutingEntity) tileentity, x, y, z);
     }
 }
