@@ -1,6 +1,7 @@
 package com.freyja.FES.common.packets;
 
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
+import com.freyja.FES.common.Network.ItemRoutingEntity;
 import com.freyja.FES.common.Network.RoutingEntity;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -46,7 +47,7 @@ public class ModPacketUpdateSettings extends PacketPurgeNetwork {
     {
         TileEntity tileEntity = player.worldObj.getBlockTileEntity(x, y, z);
         if (tileEntity instanceof RoutingEntity) {
-            ((RoutingEntity) tileEntity).setSettings(RoutingSettingsRegistry.Instance().getModSetting(modID));
+            ((RoutingEntity) tileEntity).setSettings(RoutingSettingsRegistry.Instance().getModSetting(modID, (tileEntity instanceof ItemRoutingEntity) ? RoutingSettingsRegistry.Type.ITEM : RoutingSettingsRegistry.Type.LIQUID));
         }
         if (side == Side.SERVER) {
             PacketDispatcher.sendPacketToAllAround(x, y, z, 64, player.worldObj.getWorldInfo().getDimension(), new ModPacketUpdateSettings(modID, x, y, z).makePacket());

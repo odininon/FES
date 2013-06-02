@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
-import com.freyja.FES.common.Network.{ItemRoutingEntity, RoutingEntity}
+import com.freyja.FES.common.Network.ItemRoutingEntity
 import com.freyja.FES.common.packets.PacketPurgeNetwork
 import com.freyja.FES.FES
 import cpw.mods.fml.relauncher.{Side, SideOnly}

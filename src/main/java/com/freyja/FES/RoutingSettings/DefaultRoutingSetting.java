@@ -10,7 +10,7 @@ public class DefaultRoutingSetting implements IRoutingSetting {
     @Override
     public String getName()
     {
-        return "All Items";
+        return "All";
     }
 
     @Override

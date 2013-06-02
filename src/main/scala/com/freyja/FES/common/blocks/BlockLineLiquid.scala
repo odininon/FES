@@ -6,8 +6,8 @@ import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.ForgeDirection
-import com.freyja.FES.client.renderers.{RenderLineLiquid, RenderLine}
-import com.freyja.FES.common.Network.{LiquidRoutingEntity, ItemRoutingEntity}
+import com.freyja.FES.client.renderers.RenderLineLiquid
+import com.freyja.FES.common.Network.LiquidRoutingEntity
 import com.freyja.FES.utils.Position
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.packets.PacketPurgeNetwork

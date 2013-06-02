@@ -1,10 +1,12 @@
 package com.freyja.FES.utils;
 
 import com.freyja.FES.FES;
+import com.freyja.FES.RoutingSettings.LiquidSortSettings;
 import com.freyja.FES.RoutingSettings.ModSortSettings;
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
 import com.freyja.core.utils.FreyjaGameData;
 import cpw.mods.fml.common.Loader;
+import net.minecraftforge.liquids.LiquidDictionary;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,11 +68,16 @@ public class ModCompatibility {
         Collections.sort(mods);
 
 
-        RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings("Vanilla"));
+        RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings("Vanilla"), RoutingSettingsRegistry.Type.ITEM);
 
         for (String mod : mods) {
             FES.logger().fine("Registering Routing Setting for " + mod + ".");
-            RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings(mod));
+            RoutingSettingsRegistry.Instance().registerRoutingSetting(new ModSortSettings(mod), RoutingSettingsRegistry.Type.ITEM);
+        }
+
+        for (String liquid : LiquidDictionary.getLiquids().keySet()) {
+            FES.logger().info("Registering Rotuing Setting for " + liquid + ".");
+            RoutingSettingsRegistry.Instance().registerRoutingSetting(new LiquidSortSettings(liquid), RoutingSettingsRegistry.Type.LIQUID);
         }
     }
 }

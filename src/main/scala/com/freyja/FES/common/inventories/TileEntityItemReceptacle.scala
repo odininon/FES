@@ -49,7 +49,7 @@ class TileEntityItemReceptacle extends ItemRoutingEntity {
   def writeCustomNBT(tag: NBTTagCompound) {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("Initialized", initialized)
-    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
+    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings, RoutingSettingsRegistry.Type.ITEM))
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -59,7 +59,7 @@ class TileEntityItemReceptacle extends ItemRoutingEntity {
   def readCustomNBT(tag: NBTTagCompound) {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     initialized = tag.getBoolean("Initialized")
-    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"), RoutingSettingsRegistry.Type.ITEM)
   }
 
   def updateConnections() {

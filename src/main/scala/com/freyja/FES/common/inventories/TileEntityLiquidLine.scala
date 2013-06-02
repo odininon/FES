@@ -1,6 +1,6 @@
 package com.freyja.FES.common.inventories
 
-import com.freyja.FES.common.Network.{LiquidRoutingEntity, ItemRoutingEntity}
+import com.freyja.FES.common.Network.LiquidRoutingEntity
 
 /**
  * @author Freyja

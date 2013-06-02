@@ -10,7 +10,7 @@ public class NoneSetting implements IRoutingSetting {
     @Override
     public String getName()
     {
-        return "No items";
+        return "Nothing";
     }
 
     @Override

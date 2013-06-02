@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.ForgeDirection
 import net.minecraft.item.ItemStack
-import com.freyja.FES.RoutingSettings.{IRoutingSetting, RoutingSettingsRegistry}
+import com.freyja.FES.RoutingSettings.IRoutingSetting
 
 /**
  * @author Freyja
@@ -18,7 +18,7 @@ trait RoutingEntity extends TileEntity {
   protected var connectedInventory: TileEntity = null
   protected var pullItemStacks = true
 
-  protected var routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(0)
+  protected var routingSettings: IRoutingSetting = null
 
   def getNetwork = routingNetwork
 

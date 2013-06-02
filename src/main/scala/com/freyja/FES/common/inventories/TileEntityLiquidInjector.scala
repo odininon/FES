@@ -1,6 +1,6 @@
 package com.freyja.FES.common.inventories
 
-import com.freyja.FES.common.Network.{ItemRoutingEntity, LiquidRoutingEntity}
+import com.freyja.FES.common.Network.LiquidRoutingEntity
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry
@@ -46,7 +46,7 @@ class TileEntityLiquidInjector extends LiquidRoutingEntity {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("PullItemStacks", pullItemStacks)
     tag.setBoolean("Initialized", initialized)
-    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
+    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings, RoutingSettingsRegistry.Type.LIQUID))
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -57,7 +57,7 @@ class TileEntityLiquidInjector extends LiquidRoutingEntity {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     pullItemStacks = tag.getBoolean("PullItemStacks")
     initialized = tag.getBoolean("Initialized")
-    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"), RoutingSettingsRegistry.Type.LIQUID)
   }
 
   def updateConnections() {

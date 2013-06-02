@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.packet.{Packet132TileEntityData, Packet}
-import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry
+import com.freyja.FES.RoutingSettings.{NoneSetting, DefaultRoutingSetting, LiquidSortSettings, RoutingSettingsRegistry}
 import net.minecraft.network.INetworkManager
 import net.minecraftforge.common.ForgeDirection
 import com.freyja.FES.utils.Position
@@ -48,7 +48,7 @@ class TileEntityLiquidReceptacle extends LiquidRoutingEntity {
   def writeCustomNBT(tag: NBTTagCompound) {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("Initialized", initialized)
-    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
+    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings, RoutingSettingsRegistry.Type.LIQUID))
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -58,7 +58,7 @@ class TileEntityLiquidReceptacle extends LiquidRoutingEntity {
   def readCustomNBT(tag: NBTTagCompound) {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     initialized = tag.getBoolean("Initialized")
-    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"), RoutingSettingsRegistry.Type.LIQUID)
   }
 
   def updateConnections() {
@@ -105,13 +105,23 @@ class TileEntityLiquidReceptacle extends LiquidRoutingEntity {
   }
 
   def canAccept(stack: LiquidStack): Boolean = {
-    if(connectedInventory == null) return false
+    if (connectedInventory == null) return false
+
+    var flag = false
+
     connectedInventory match {
       case te: ITankContainer => {
-        if (te.fill(orientation.getOpposite, stack, false) > 0) return true
+        if (te.fill(orientation.getOpposite, stack, false) > 0) flag = true
       }
     }
-    false
+
+    val setting = getSettings match {
+      case s: LiquidSortSettings => s.isLiquidValid(stack)
+      case s: DefaultRoutingSetting => true
+      case s: NoneSetting => false
+    }
+
+    flag && setting
   }
 
   def inject() {

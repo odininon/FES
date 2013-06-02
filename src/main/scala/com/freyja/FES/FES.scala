@@ -158,10 +158,13 @@ object FES {
 
   @PostInit
   def postInit(event: FMLPostInitializationEvent) {
-    RoutingSettingsRegistry.Instance().registerRoutingSetting(new NoneSetting())
-    RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting())
-    RoutingSettingsRegistry.Instance().registerRoutingSetting(new SmeltablesSettings())
+    RoutingSettingsRegistry.Instance().registerRoutingSetting(new NoneSetting(), RoutingSettingsRegistry.Type.BOTH)
+    RoutingSettingsRegistry.Instance().registerRoutingSetting(new DefaultRoutingSetting(), RoutingSettingsRegistry.Type.BOTH)
+    RoutingSettingsRegistry.Instance().registerRoutingSetting(new SmeltablesSettings(), RoutingSettingsRegistry.Type.ITEM)
     ModCompatibility.init()
     ModCompatibility.registerSettings()
+
+    RoutingSettingsRegistry.Instance().sort(RoutingSettingsRegistry.Type.ITEM)
+    RoutingSettingsRegistry.Instance().sort(RoutingSettingsRegistry.Type.LIQUID)
   }
 }

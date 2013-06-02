@@ -46,7 +46,7 @@ class TileEntityItemInjector extends ItemRoutingEntity {
     tag.setInteger("Orientation", orientation.ordinal())
     tag.setBoolean("PullItemStacks", pullItemStacks)
     tag.setBoolean("Initialized", initialized)
-    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings))
+    tag.setInteger("RoutingSettings", RoutingSettingsRegistry.Instance().indexOf(routingSettings, RoutingSettingsRegistry.Type.ITEM))
   }
 
   override def onDataPacket(net: INetworkManager, pkt: Packet132TileEntityData) {
@@ -57,7 +57,7 @@ class TileEntityItemInjector extends ItemRoutingEntity {
     orientation = ForgeDirection.getOrientation(tag.getInteger("Orientation"))
     pullItemStacks = tag.getBoolean("PullItemStacks")
     initialized = tag.getBoolean("Initialized")
-    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"))
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(tag.getInteger("RoutingSettings"), RoutingSettingsRegistry.Type.ITEM)
   }
 
   def updateConnections() {

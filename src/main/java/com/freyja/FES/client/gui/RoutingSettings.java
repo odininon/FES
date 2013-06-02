@@ -1,7 +1,9 @@
 package com.freyja.FES.client.gui;
 
+import com.freyja.FES.RoutingSettings.LiquidSortSettings;
 import com.freyja.FES.RoutingSettings.ModSortSettings;
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
+import com.freyja.FES.common.Network.LiquidRoutingEntity;
 import com.freyja.FES.common.Network.RoutingEntity;
 import com.freyja.FES.common.packets.ModPacketUpdateSettings;
 import com.freyja.FES.common.packets.PacketUpdateSettings;
@@ -21,8 +23,10 @@ import net.minecraft.tileentity.TileEntity;
 public class RoutingSettings extends GuiScreen {
 
     private int index = 0;
-    private int tempIndex = index;
+    private int tempIndex = 0;
     private RoutingEntity entity;
+
+    private RoutingSettingsRegistry.Type type;
 
     private int x;
     private int y;
@@ -31,17 +35,19 @@ public class RoutingSettings extends GuiScreen {
     public RoutingSettings(TileEntity te)
     {
         this.entity = (RoutingEntity) te;
+        this.type = (te instanceof LiquidRoutingEntity) ? RoutingSettingsRegistry.Type.LIQUID : RoutingSettingsRegistry.Type.ITEM;
         this.x = te.xCoord;
         this.y = te.yCoord;
         this.z = te.zCoord;
-        this.index = RoutingSettingsRegistry.Instance().indexOf(entity.getSettings());
+        this.index = (type == RoutingSettingsRegistry.Type.LIQUID) ? RoutingSettingsRegistry.Instance().indexOf(entity.getSettings(), RoutingSettingsRegistry.Type.LIQUID) : RoutingSettingsRegistry.Instance().indexOf(entity.getSettings(), RoutingSettingsRegistry.Type.ITEM);
+        this.tempIndex = index;
     }
 
     @Override
     public void initGui()
     {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 75, this.height / 2 - 10, 150, 20, RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName()));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 75, this.height / 2 - 10, 150, 20, RoutingSettingsRegistry.Instance().getRoutingSetting(index, type).getName()));
     }
 
     @Override
@@ -58,12 +64,12 @@ public class RoutingSettings extends GuiScreen {
     {
         super.actionPerformed(par1GuiButton);
         if (par1GuiButton.id == 0) {
-            tempIndex += 1;
-            if (tempIndex >= RoutingSettingsRegistry.Instance().getSize()) tempIndex = 0;
+            tempIndex = index + 1;
+            if (tempIndex >= RoutingSettingsRegistry.Instance().getSize(type)) tempIndex = 0;
 
             if (tempIndex != index) {
                 index = tempIndex;
-                ((GuiButton) buttonList.get(buttonList.indexOf(par1GuiButton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName();
+                ((GuiButton) buttonList.get(buttonList.indexOf(par1GuiButton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index, type).getName();
             }
         }
     }
@@ -104,7 +110,7 @@ public class RoutingSettings extends GuiScreen {
 
             if (tempIndex != index) {
                 index = tempIndex;
-                ((GuiButton) buttonList.get(buttonList.indexOf(guibutton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName();
+                ((GuiButton) buttonList.get(buttonList.indexOf(guibutton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index, type).getName();
             }
         }
     }
@@ -112,12 +118,12 @@ public class RoutingSettings extends GuiScreen {
     private void actionPerformedRightButton(GuiButton guibutton)
     {
         if (guibutton.id == 0) {
-            tempIndex -= 1;
-            if (tempIndex <= -1) tempIndex = RoutingSettingsRegistry.Instance().getSize() - 1;
+            tempIndex = index - 1;
+            if (tempIndex <= -1) tempIndex = RoutingSettingsRegistry.Instance().getSize(type) - 1;
 
             if (tempIndex != index) {
                 index = tempIndex;
-                ((GuiButton) buttonList.get(buttonList.indexOf(guibutton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index).getName();
+                ((GuiButton) buttonList.get(buttonList.indexOf(guibutton))).displayString = RoutingSettingsRegistry.Instance().getRoutingSetting(index, type).getName();
             }
         }
     }
@@ -127,9 +133,11 @@ public class RoutingSettings extends GuiScreen {
     {
         super.onGuiClosed();
 
-        if (index != RoutingSettingsRegistry.Instance().indexOf(entity.getSettings())) {
-            if (RoutingSettingsRegistry.Instance().getRoutingSetting(index) instanceof ModSortSettings) {
-                PacketDispatcher.sendPacketToServer(new ModPacketUpdateSettings(((ModSortSettings) RoutingSettingsRegistry.Instance().getRoutingSetting(index)).getModId(), x, y, z).makePacket());
+        if (index != RoutingSettingsRegistry.Instance().indexOf(entity.getSettings(), type)) {
+            if (RoutingSettingsRegistry.Instance().getRoutingSetting(index, type) instanceof ModSortSettings) {
+                PacketDispatcher.sendPacketToServer(new ModPacketUpdateSettings(((ModSortSettings) RoutingSettingsRegistry.Instance().getRoutingSetting(index, type)).getModId(), x, y, z).makePacket());
+            } else if (RoutingSettingsRegistry.Instance().getRoutingSetting(index, type) instanceof LiquidSortSettings) {
+                PacketDispatcher.sendPacketToServer(new ModPacketUpdateSettings((RoutingSettingsRegistry.Instance().getRoutingSetting(index, type)).getName(), x, y, z).makePacket());
             } else {
                 PacketDispatcher.sendPacketToServer(new PacketUpdateSettings(index, x, y, z).makePacket());
             }

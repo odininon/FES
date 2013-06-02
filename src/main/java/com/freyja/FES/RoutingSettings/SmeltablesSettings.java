@@ -12,7 +12,7 @@ public class SmeltablesSettings implements IRoutingSetting {
     @Override
     public String getName()
     {
-        return "Smeltable Items";
+        return "Smeltable";
     }
 
     @Override

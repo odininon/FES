@@ -20,8 +20,10 @@ class LiquidRoutingEntity extends RoutingEntity {
 
   override def getNetwork: LiquidRoutingNetwork = routingNetwork
 
+  routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(0, RoutingSettingsRegistry.Type.LIQUID)
+
   def initRotate(tileEntity: TileEntity) {
-    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(1)
+    routingSettings = RoutingSettingsRegistry.Instance().getRoutingSetting(1, RoutingSettingsRegistry.Type.LIQUID)
     if (tileEntity.worldObj != null && !tileEntity.worldObj.isRemote) {
 
       val otherTE = ((for (i <- -1 to 1) yield tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord + i, tileEntity.yCoord, tileEntity.zCoord)).toList :::

@@ -1,6 +1,6 @@
 package com.freyja.FES.common.blocks
 
-import com.freyja.FES.common.inventories.{TileEntityLiquidInjector, TileEntityItemInjector}
+import com.freyja.FES.common.inventories.TileEntityLiquidInjector
 import net.minecraft.block.BlockContainer
 import net.minecraft.block.material.Material
 import net.minecraft.tileentity.TileEntity
@@ -8,7 +8,7 @@ import net.minecraft.world.World
 import net.minecraft.entity.player.EntityPlayer
 import cpw.mods.fml.common.network.PacketDispatcher
 import com.freyja.FES.common.packets.PacketPurgeNetwork
-import com.freyja.FES.common.Network.{LiquidRoutingEntity, ItemRoutingEntity}
+import com.freyja.FES.common.Network.LiquidRoutingEntity
 import com.freyja.FES.FES
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 
@@ -39,10 +39,7 @@ class BlockInjectorLiquid(blockId: Int, material: Material) extends BlockContain
       }
     } else {
       if (!player.isSneaking) {
-        //FES.proxy.openLocalGui(0, x, y, z)
-        val te = world.getBlockTileEntity(x, y, z).asInstanceOf[TileEntityLiquidInjector]
-        player.addChatMessage("Count: " + te.getNetwork.count)
-        player.addChatMessage("Connected: " + te.getConnected)
+        FES.proxy.openLocalGui(0, x, y, z)
       }
     }
     true
