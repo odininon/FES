@@ -53,7 +53,7 @@ def main():
     if args.verbose:
         print(change)
 
-    log = ["#", "#Changelog for FES v" + major + "." + minor + "-" + rev, "#", ""]
+    log = ["#", "#Changelog for FES v" + major + "." + minor, "#", ""]
 
     for line in table:
         if not line.startswith('-'): continue
