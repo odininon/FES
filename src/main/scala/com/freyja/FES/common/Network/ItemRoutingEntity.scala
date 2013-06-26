@@ -76,7 +76,7 @@ trait ItemRoutingEntity extends RoutingEntity {
 
     inventory match {
       case x: ISidedInventory => {
-        for (slot <- x.getSizeInventorySide(relativeDirections(inventory, this).ordinal())) {
+        for (slot <- x.getAccessibleSlotsFromSide(relativeDirections(inventory, this).ordinal())) {
           val tempStack = x.getStackInSlot(slot)
           if (tempStack != null) {
             val itemStack = tempStack.copy
@@ -84,7 +84,7 @@ trait ItemRoutingEntity extends RoutingEntity {
               case false => 1
               case true => tempStack.stackSize
             }
-            val canExtract = x.func_102008_b(slot, itemStack, orientation.getOpposite.ordinal()) && routingSettings.isItemValid(itemStack)
+            val canExtract = x.canExtractItem(slot, itemStack, orientation.getOpposite.ordinal()) && routingSettings.isItemValid(itemStack)
             if (canExtract && itemStack != null) {
               while (!getNetwork.injectItemStack(itemStack, this, slot, x) && itemStack.stackSize > 0) {
                 itemStack.stackSize -= 1

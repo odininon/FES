@@ -24,7 +24,7 @@ import net.minecraftforge.common.Configuration
  *         Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-@Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", useMetadata = true, dependencies = "required-after:Freyja_core")
+@Mod(name = "Freyja's Easy Sorting", modid = "FES", modLanguage = "scala", useMetadata = true)
 @NetworkMod(channels = Array[String] {
   "FES"
 }, clientSideRequired = true, serverSideRequired = false, packetHandler = classOf[PacketHandler])

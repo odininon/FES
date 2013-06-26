@@ -104,10 +104,10 @@ class TileEntityItemReceptacle extends ItemRoutingEntity {
     getConnected match {
       case x: ISidedInventory => {
         for (
-          slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())
+          slot <- x.getAccessibleSlotsFromSide(orientation.getOpposite.ordinal())
           if x.getStackInSlot(slot) == null || x.getStackInSlot(slot).isItemEqual(itemStack)
         ) {
-          if (x.func_102007_a(slot, itemStack, orientation.getOpposite.ordinal())) {
+          if (x.canInsertItem(slot, itemStack, orientation.getOpposite.ordinal())) {
             merge(itemStack, slot)
             if (itemStack.stackSize <= 0) {
               return
@@ -181,8 +181,8 @@ class TileEntityItemReceptacle extends ItemRoutingEntity {
 
     getConnected match {
       case x: ISidedInventory => {
-        for (slot <- x.getSizeInventorySide(orientation.getOpposite.ordinal())) {
-          if (x.func_102007_a(slot, itemStack, orientation.getOpposite.ordinal())) {
+        for (slot <- x.getAccessibleSlotsFromSide(orientation.getOpposite.ordinal())) {
+          if (x.canInsertItem(slot, itemStack, orientation.getOpposite.ordinal())) {
             if (getConnected.asInstanceOf[IInventory].getStackInSlot(slot) == null || canMerge(getConnected.asInstanceOf[IInventory].getStackInSlot(slot), itemStack)) return true
           }
         }

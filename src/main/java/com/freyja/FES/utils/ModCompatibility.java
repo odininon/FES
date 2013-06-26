@@ -4,12 +4,17 @@ import com.freyja.FES.FES;
 import com.freyja.FES.RoutingSettings.LiquidSortSettings;
 import com.freyja.FES.RoutingSettings.ModSortSettings;
 import com.freyja.FES.RoutingSettings.RoutingSettingsRegistry;
-import com.freyja.core.utils.FreyjaGameData;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.ItemData;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.liquids.LiquidDictionary;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Freyja
@@ -17,14 +22,13 @@ import java.util.Collections;
  */
 public class ModCompatibility {
     public static Class SmelteryLogic;
+    private static Map<Integer, String> itemMap = new HashMap<Integer, String>();
 
-    public static boolean isTConstructLoaded()
-    {
+    public static boolean isTConstructLoaded() {
         return Loader.isModLoaded("TConstruct");
     }
 
-    public static int getSmelteryHeight(Object smelterty)
-    {
+    public static int getSmelteryHeight(Object smelterty) {
         try {
             if (SmelteryLogic == null)
                 SmelteryLogic = Class.forName("mods.tinker.tconstruct.blocks.logic.SmelteryLogic");
@@ -40,8 +44,7 @@ public class ModCompatibility {
         }
     }
 
-    public static void init()
-    {
+    public static void init() {
         if (isTConstructLoaded()) {
             FES.logger().info("Loading TConstruct compatibility.");
             try {
@@ -52,13 +55,19 @@ public class ModCompatibility {
         } else {
             FES.logger().info("Not loading TConstruct compatibility.");
         }
+
+        NBTTagList list = new NBTTagList();
+        GameData.writeItemData(list);
+        for (int i = 0; i < list.tagCount(); i++) {
+            ItemData itemData = new ItemData((NBTTagCompound) list.tagAt(i));
+            itemMap.put(itemData.getItemId(), itemData.getModId());
+        }
     }
 
-    public static void registerSettings()
-    {
+    public static void registerSettings() {
         ArrayList<String> mods = new ArrayList<String>();
 
-        for (Object modID : FreyjaGameData.getMap().values()) {
+        for (Object modID : getItemMap().values()) {
             String mod = (String) modID;
             if (!mods.contains(mod)) {
                 mods.add(mod);
@@ -79,5 +88,13 @@ public class ModCompatibility {
             FES.logger().info("Registering Rotuing Setting for " + liquid + ".");
             RoutingSettingsRegistry.Instance().registerRoutingSetting(new LiquidSortSettings(liquid), RoutingSettingsRegistry.Type.LIQUID);
         }
+    }
+
+    public static Map<Integer, String> getItemMap() {
+        return itemMap;
+    }
+
+    public static boolean partofMod(String modId, int itemID) {
+        return getItemMap().containsKey(itemID) && getItemMap().get(itemID).equals(modId);
     }
 }

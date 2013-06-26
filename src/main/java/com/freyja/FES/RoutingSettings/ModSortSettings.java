@@ -1,6 +1,6 @@
 package com.freyja.FES.RoutingSettings;
 
-import com.freyja.core.utils.FreyjaGameData;
+import com.freyja.FES.utils.ModCompatibility;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -56,7 +56,7 @@ public class ModSortSettings implements IRoutingSetting {
         }
 
         //Checks Items
-        if (FreyjaGameData.partofMod(modId, itemStack.itemID)) {
+        if (ModCompatibility.partofMod(modId, itemStack.itemID)) {
             return true;
         }
 
